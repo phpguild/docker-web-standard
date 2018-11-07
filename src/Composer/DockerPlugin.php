@@ -63,6 +63,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         if (file_exists($appDir . '/docker-compose.yml')) {
             $this->io->write('<fg=blue>[✓] Already exists docker-compose</fg=blue>');
             $this->io->write('');
+            return;
         }
 
         (new Filesystem())->mirror($dataDir, $appDir);

@@ -5,7 +5,6 @@ namespace Phpguild\Docker\Composer;
 use Composer\Composer;
 use Composer\Plugin\PluginInterface;
 use Composer\EventDispatcher\EventSubscriberInterface;
-use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Composer\IO\IOInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -51,25 +50,36 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * runScheduledTasks
-     *
-     * @param Event $event
      */
-    public function runScheduledTasks(Event $event): void
+    public function runScheduledTasks(): void
     {
         $vendorDir = $this->composer->getConfig()->get('vendor-dir');
         $appDir = $vendorDir . '/..';
         $pluginDir = realpath(__DIR__) . '/../..';
         $dataDir = $pluginDir . '/data';
+        $envFile = $appDir . '/.env';
 
         $this->io->write('');
-
-        if (!file_exists($appDir . '/docker-compose.yml')) {
-            (new Filesystem())->mirror($dataDir, $appDir);
-            $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
-        } else {
+        if (file_exists($appDir . '/docker-compose.yml')) {
             $this->io->write('<fg=blue>[✓] Already exists docker-compose</fg=blue>');
+            $this->io->write('');
         }
 
+        (new Filesystem())->mirror($dataDir, $appDir);
+
+        $envData = file_exists($envFile) ? file_get_contents($envFile) : '';
+        if (!preg_match('/###> phpguild\/docker-web-standard ###/', $envData)) {
+            $envData .=
+                PHP_EOL .
+                '###> phpguild/docker-web-standard ###' . PHP_EOL .
+                'MYSQL_ROOT_PASSWORD=password' . PHP_EOL .
+                'MYSQL_DATABASE=myapp' . PHP_EOL .
+                '###< phpguild/docker-web-standard ###' . PHP_EOL
+            ;
+            file_put_contents($envFile, $envData);
+        }
+
+        $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
         $this->io->write('');
     }
 }

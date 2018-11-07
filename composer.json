@@ -1,6 +1,6 @@
 {
   "name": "phpguild/docker-web-standard",
-  "license": "proprietary",
+  "license": "MIT",
   "description": "Docker Web Standard",
   "type": "composer-plugin",
   "homepage": "https://github.com/phpguild/docker-web-standard",

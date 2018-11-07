@@ -57,7 +57,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $appDir = $vendorDir . '/..';
         $pluginDir = realpath(__DIR__) . '/../..';
         $dataDir = $pluginDir . '/data';
-        $envFile = $appDir . '/.env';
 
         $this->io->write('');
         if (file_exists($appDir . '/docker-compose.yml')) {
@@ -68,6 +67,20 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
 
         (new Filesystem())->mirror($dataDir, $appDir);
 
+        $this->updateEnvFile($appDir . '/.env');
+        $this->updateEnvFile($appDir . '/.env.dist');
+
+        $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
+        $this->io->write('');
+    }
+
+    /**
+     * updateEnvFile
+     *
+     * @param $envFile
+     */
+    private function updateEnvFile($envFile): void
+    {
         $envData = file_exists($envFile) ? file_get_contents($envFile) : '';
         if (!preg_match('/###> phpguild\/docker-web-standard ###/', $envData)) {
             $envData .=
@@ -79,8 +92,5 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             ;
             file_put_contents($envFile, $envData);
         }
-
-        $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
-        $this->io->write('');
     }
 }

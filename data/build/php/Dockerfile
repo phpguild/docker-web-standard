@@ -18,9 +18,9 @@ RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install exif
 
 # PHP ZIP
-RUN apt-get install -y libzip-dev \
+RUN apt-get install -y libzip-dev zip unzip \
     && docker-php-ext-configure zip --with-libzip \
-    && docker-php-ext-install mbstring
+    && docker-php-ext-install zip
 
 # PHP Intl
 RUN apt-get install -y libicu-dev \

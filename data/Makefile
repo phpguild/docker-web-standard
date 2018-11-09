@@ -9,4 +9,4 @@ start:
 down:
 	docker-compose down
 composer:
-	docker exec -it myapp_php composer --no-dev --optimize-autoloader --no-plugins -v install
+	docker exec -it myapp_php bash -c 'APP_ENV=prod composer --no-dev --optimize-autoloader -v install'

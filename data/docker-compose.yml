@@ -32,6 +32,9 @@ services:
     - "$PWD/config/php/php.ini:/usr/local/etc/php/php.ini"
     - "$PWD/data/composer:/root/.composer"
     - "$PWD:/var/www"
+    - "$SSH_AUTH_SOCK:/ssh-agent"
+    environment:
+    - SSH_AUTH_SOCK=/ssh-agent
     env_file:
     - "$PWD/.env"
 

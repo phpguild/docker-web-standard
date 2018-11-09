@@ -66,6 +66,9 @@ RUN apt-get autoremove --purge -y \
     && apt-get autoclean \
     && rm -rf /var/lib/apt/lists/*
 
+# SSH
+RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+
 # Permissions
 RUN usermod -u 1000 www-data
 

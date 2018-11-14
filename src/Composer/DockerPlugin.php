@@ -67,6 +67,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
 
         (new Filesystem())->mirror($dataDir, $appDir);
 
+        $this->updateGitFile($appDir . '/.gitignore');
         $this->updateEnvFile($appDir . '/.env');
         $this->updateEnvFile($appDir . '/.env.dist');
 
@@ -77,20 +78,41 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
     /**
      * updateEnvFile
      *
-     * @param $envFile
+     * @param string $file
      */
-    private function updateEnvFile($envFile): void
+    private function updateEnvFile(string $file): void
     {
-        $envData = file_exists($envFile) ? file_get_contents($envFile) : '';
-        if (!preg_match('/###> phpguild\/docker-web-standard ###/', $envData)) {
-            $envData .=
+        $data = file_exists($file) ? file_get_contents($file) : '';
+        if (!preg_match('/###> phpguild\/docker-web-standard ###/', $data)) {
+            $data .=
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=password' . PHP_EOL .
                 'MYSQL_DATABASE=myapp' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;
-            file_put_contents($envFile, $envData);
+            file_put_contents($file, $data);
+        }
+    }
+
+    /**
+     * updateGitFile
+     *
+     * @param string $file
+     */
+    private function updateGitFile(string $file): void
+    {
+        $data = file_exists($file) ? file_get_contents($file) : '';
+        if (!preg_match('/###> phpguild\/docker-web-standard ###/', $data)) {
+            $data .=
+                PHP_EOL .
+                '###> phpguild/docker-web-standard ###' . PHP_EOL .
+                '/.composer/' . PHP_EOL .
+                '/.ssh/' . PHP_EOL .
+                '/data/' . PHP_EOL .
+                '###< phpguild/docker-web-standard ###' . PHP_EOL
+            ;
+            file_put_contents($file, $data);
         }
     }
 }

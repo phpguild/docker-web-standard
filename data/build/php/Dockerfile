@@ -75,4 +75,5 @@ RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
 # Permissions
 RUN usermod -u 1000 www-data
 
+# Workdir
 WORKDIR /var/www

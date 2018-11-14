@@ -16,4 +16,4 @@ Into `docker-compose.yml` and nginx config files, replace `myapp` by your projec
 
 ## Usage
 
-    docker-compose up -d --build
+    make install

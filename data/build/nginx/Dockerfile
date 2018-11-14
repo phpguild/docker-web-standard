@@ -2,8 +2,8 @@ FROM nginx:1.15
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
-# Update
-RUN apt-get update
+# APP environment
+ARG APP_ENV
 
 # Clean
 RUN apt-get autoremove --purge -y \

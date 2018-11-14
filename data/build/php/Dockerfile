@@ -2,6 +2,9 @@ FROM php:7.2-fpm-stretch
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
+# APP environment
+ARG APP_ENV
+
 # Update
 RUN apt-get update
 

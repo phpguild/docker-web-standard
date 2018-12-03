@@ -1,5 +1,6 @@
-$(shell if [ ! -f ./.env ]; then cp ./.env.dist ./.env; fi)
+$(shell if [ ! -f ./.env.local ]; then cp ./.env ./.env.local; fi)
 include $(realpath .)/.env
+include $(realpath .)/.env.local
 export
 
 start:

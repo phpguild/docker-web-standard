@@ -61,6 +61,8 @@ RUN rm /etc/localtime \
 # Composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/var/www/data/composer
+ENV COMPOSER_CACHE_DIR=/var/www/data/composer/cache
 RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer \
     && chmod +x /usr/bin/composer
 
@@ -70,10 +72,13 @@ RUN apt-get autoremove --purge -y \
     && rm -rf /var/lib/apt/lists/*
 
 # SSH
-RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+RUN echo "StrictHostKeyChecking no\nUserKnownHostsFile=/dev/null" >> /etc/ssh/ssh_config
 
 # Permissions
-RUN usermod -u 1000 www-data
+RUN mkdir /home/www-data \
+    && chown -R www-data:www-data /home/www-data \
+    && usermod -d /home/www-data www-data \
+    && usermod -u 1000 www-data
 
 # Workdir
 WORKDIR /var/www

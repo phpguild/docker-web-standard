@@ -19,6 +19,7 @@ services:
     - "$PWD:/var/www"
     env_file:
     - "$PWD/.env"
+    - "$PWD/.env.local"
 
   php:
     image: myapp_php
@@ -38,6 +39,7 @@ services:
     - SSH_AUTH_SOCK=/ssh-agent
     env_file:
     - "$PWD/.env"
+    - "$PWD/.env.local"
 
   database:
     image: mariadb:10.3
@@ -47,3 +49,4 @@ services:
     - "$PWD/data/mysql:/var/lib/mysql"
     env_file:
     - "$PWD/.env"
+    - "$PWD/.env.local"

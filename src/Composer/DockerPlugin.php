@@ -69,7 +69,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
 
         $this->updateGitFile($appDir . '/.gitignore');
         $this->updateEnvFile($appDir . '/.env');
-        $this->updateEnvFile($appDir . '/.env.dist');
 
         $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
         $this->io->write('');
@@ -107,8 +106,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             $data .=
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
-                '/.composer/' . PHP_EOL .
-                '/.ssh/' . PHP_EOL .
                 '/data/' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;

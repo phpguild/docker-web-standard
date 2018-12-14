@@ -61,9 +61,9 @@ install/proxy:
 .PHONY: install/ssl
 
 install/ssl:
-ifeq ("$(wildcard /etc/nginx/certs/selfsigned.crt)","")
+ifeq ("$(wildcard /etc/nginx/certs/dev.test.crt)","")
 	mkdir -p /etc/nginx/certs
-	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/selfsigned.key -out /etc/nginx/certs/selfsigned.crt
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/dev.test.key -out /etc/nginx/certs/dev.test.crt
 	openssl dhparam -out /etc/nginx/certs/dhparams.pem 2048
-	grep -q -F '127.0.0.1 dev.local' /etc/hosts || echo '127.0.0.1 dev.local' >> /etc/hosts
+	grep -q -F '127.0.0.1 dev.test' /etc/hosts || echo '127.0.0.1 dev.test' >> /etc/hosts
 endif

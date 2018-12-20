@@ -3,41 +3,49 @@ include $(realpath .)/.env
 include $(realpath .)/.env.local
 export
 
-## Install
-.PHONY: start restart stop down install update
-
-start:
-	docker-compose up -d --build
-
-restart:
-	make down
-	make start
-
-stop:
-	docker-compose stop
-
-down:
-	docker-compose down
+## Common
+.PHONY: install update restart
 
 install:
-	make start
-	make composer
-ifeq (prod, $(APP_ENV))
-	service nginx reload
-endif
+	make docker/start
+	make install/composer
+	make install/ssl
+	make install/proxy
 
 update:
+	make docker/down
+	make update/git
+	make install
+
+restart:
+	make docker/down
+	make docker/start
+
+## Docker
+.PHONY: docker/start docker/stop docker/down
+
+docker/start:
+	docker-compose up -d --build
+
+docker/stop:
+	docker-compose stop
+
+docker/down:
+	docker-compose down
+
+## GIT
+.PHONY: update/git
+
+update/git:
 	$(eval BRANCH := $(shell git rev-parse --abbrev-ref HEAD))
-	make down
 	git fetch
 	git checkout "$(BRANCH)"
 	git reset --hard "origin/$(BRANCH)"
-	make install
 
 ## Composer
-.PHONY: composer
+.PHONY: install/composer
 
-composer:
+install/composer:
 ifeq (prod, $(APP_ENV))
 		docker exec -it myapp_php bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
 else
@@ -52,18 +60,44 @@ dump/mysql:
 	docker exec myapp_database cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/$(MYSQL_DATABASE).sql"
 
 ## Proxy
-.PHONY: install/proxy
+.PHONY: install/proxy install/proxy/prod install/proxy/preprod install/proxy/dev
 
 install/proxy:
-	ln -s "${PWD}/config/nginx/proxies/$(APP_ENV).conf" "/etc/nginx/sites-enabled/myapp.conf"
+ifeq (prod, $(APP_ENV))
+		make install/proxy/prod
+		make install/proxy/preprod
+else
+		make install/proxy/dev
+endif
+	service nginx reload
+
+install/proxy/prod:
+ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.prod.conf)","")
+		ln -s "${PWD}/config/nginx/proxies/prod.conf" "/etc/nginx/sites-enabled/myapp.prod.conf"
+endif
+
+install/proxy/preprod:
+ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.preprod.conf)","")
+		ln -s "${PWD}/config/nginx/proxies/preprod.conf" "/etc/nginx/sites-enabled/myapp.preprod.conf"
+endif
+
+install/proxy/dev:
+ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.dev.conf)","")
+		ln -s "${PWD}/config/nginx/proxies/dev.conf" "/etc/nginx/sites-enabled/myapp.dev.conf"
+endif
 
 ## SSL
-.PHONY: install/ssl
+.PHONY: install/ssl install/ssl/dev
 
 install/ssl:
-ifeq ("$(wildcard /etc/nginx/certs/dev.test.crt)","")
+ifneq (prod, $(APP_ENV))
+		make install/ssl/dev
+endif
+
+install/ssl/dev:
+ifeq ("$(wildcard /etc/nginx/certs/selfsigned.crt)","")
 	mkdir -p /etc/nginx/certs
-	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/dev.test.key -out /etc/nginx/certs/dev.test.crt
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/selfsigned.key -out /etc/nginx/certs/selfsigned.crt
 	openssl dhparam -out /etc/nginx/certs/dhparams.pem 2048
-	grep -q -F '127.0.0.1 dev.test' /etc/hosts || echo '127.0.0.1 dev.test' >> /etc/hosts
+	grep -q -F '127.0.0.1 myapp.test' /etc/hosts || echo '127.0.0.1 myapp.test' >> /etc/hosts
 endif

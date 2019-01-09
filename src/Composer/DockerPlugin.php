@@ -86,6 +86,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             $data .=
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
+                'APP_PORT=8000' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=password' . PHP_EOL .
                 'MYSQL_DATABASE=myapp' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL

@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-stretch
+FROM php:7.2.13-fpm-stretch
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
@@ -6,6 +6,7 @@ MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 ARG APP_ENV
 
 # Update
+RUN rm -f /etc/apt/sources.list.d/*
 RUN apt-get update
 
 # Global

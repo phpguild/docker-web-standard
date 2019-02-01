@@ -8,7 +8,8 @@ ARG APP_ENV
 # Clean
 RUN apt-get autoremove --purge -y \
     && apt-get autoclean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/*
 
 # Permissions
 RUN usermod -u 1000 www-data

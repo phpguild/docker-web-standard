@@ -64,13 +64,14 @@ RUN rm /etc/localtime \
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/var/www/data/composer
 ENV COMPOSER_CACHE_DIR=/var/www/data/composer/cache
-RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer \
+RUN curl -L "https://getcomposer.org/composer.phar" -o /usr/bin/composer \
     && chmod +x /usr/bin/composer
 
 # Clean
 RUN apt-get autoremove --purge -y \
     && apt-get autoclean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/*
 
 # SSH
 RUN echo "StrictHostKeyChecking no\nUserKnownHostsFile=/dev/null" >> /etc/ssh/ssh_config

@@ -1,7 +1,13 @@
-$(shell if [ ! -f ./.env.local ]; then cp ./.env ./.env.local; fi)
-include $(realpath .)/.env
-include $(realpath .)/.env.local
+## ----------------------------------------------------------
+## ENV
+## ----------------------------------------------------------
+$(shell if [ ! -f .env.local ]; then cp .env .env.local; fi)
+include .env
+include .env.local
 export
+
+DOCKER_PHP := myapp_php_${APP_INSTANCE}
+DOCKER_DATABASE := myapp_database_${APP_INSTANCE}
 
 ## ----------------------------------------------------------
 ## Common
@@ -10,13 +16,16 @@ export
 
 install:
 	make docker/start
-	make install/composer
 	make install/proxy
+	make install/composer
+	make install/filesystem
 
 update:
 	make docker/down
 	make update/git
-	make install
+	make docker/start
+	make install/composer
+	make install/filesystem
 
 restart:
 	make docker/down
@@ -28,7 +37,7 @@ restart:
 .PHONY: docker/start docker/stop docker/down
 
 docker/start:
-	docker-compose up -d --build
+	docker-compose up -d --build --remove-orphans
 
 docker/stop:
 	docker-compose stop
@@ -54,9 +63,9 @@ update/git:
 
 install/composer:
 ifeq (prod, $(APP_ENV))
-	docker exec -it myapp_php bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+	docker exec ${DOCKER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
 else
-	docker exec -u 1000 -it myapp_php php -d memory_limit=-1 /usr/bin/composer update
+	docker exec -u 1000 ${DOCKER_PHP} php -d memory_limit=-1 /usr/bin/composer update
 endif
 
 ## ----------------------------------------------------------
@@ -105,5 +114,15 @@ endif
 .PHONY: dump/mysql
 
 dump/mysql:
-	docker exec myapp_database bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
-	docker exec myapp_database cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/$(MYSQL_DATABASE).sql"
+	docker exec ${DOCKER_DATABASE} bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
+	docker exec ${DOCKER_DATABASE} cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/$(MYSQL_DATABASE).sql"
+
+## ----------------------------------------------------------
+## Filesystem
+## ----------------------------------------------------------
+.PHONY: install/filesystem
+
+install/filesystem:
+ifeq (prod, $(APP_ENV))
+	chown -R 1000:1000 ./var
+endif

@@ -71,51 +71,30 @@ endif
 ## ----------------------------------------------------------
 ## Proxy
 ## ----------------------------------------------------------
-.PHONY: install/proxy install/proxy/prod install/proxy/preprod install/proxy/dev
+.PHONY: install/proxy
 
 install/proxy:
 ifeq (prod, $(APP_ENV))
-	make install/proxy/prod
-	make install/proxy/preprod
+ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.$(APP_INSTANCE).conf)","")
+	ln -s "${PWD}/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/myapp.$(APP_INSTANCE).conf"
 	service nginx reload
 endif
-
-install/proxy/prod:
-ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.prod.conf)","")
-	ln -s "${PWD}/config/nginx/proxies/prod.conf" "/etc/nginx/sites-enabled/myapp.prod.conf"
-endif
-
-install/proxy/preprod:
-ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.preprod.conf)","")
-	ln -s "${PWD}/config/nginx/proxies/preprod.conf" "/etc/nginx/sites-enabled/myapp.preprod.conf"
-endif
-
-install/proxy/dev:
-ifeq ("$(wildcard /etc/nginx/sites-enabled/myapp.dev.conf)","")
-	ln -s "${PWD}/config/nginx/proxies/dev.conf" "/etc/nginx/sites-enabled/myapp.dev.conf"
 endif
 
 ## ----------------------------------------------------------
 ## SSL
 ## ----------------------------------------------------------
-.PHONY: install/ssl/dev
+.PHONY: install/ssl
 
-install/ssl/dev:
+install/ssl:
+ifeq (dev, $(APP_ENV))
 ifeq ("$(wildcard /etc/nginx/certs/selfsigned.crt)","")
 	mkdir -p /etc/nginx/certs
 	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/selfsigned.key -out /etc/nginx/certs/selfsigned.crt
 	openssl dhparam -out /etc/nginx/certs/dhparams.pem 2048
 	grep -q -F '127.0.0.1 myapp.test' /etc/hosts || echo '127.0.0.1 myapp.test' >> /etc/hosts
 endif
-
-## ----------------------------------------------------------
-## Dump
-## ----------------------------------------------------------
-.PHONY: dump/mysql
-
-dump/mysql:
-	docker exec ${DOCKER_DATABASE} bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
-	docker exec ${DOCKER_DATABASE} cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/$(MYSQL_DATABASE).sql"
+endif
 
 ## ----------------------------------------------------------
 ## Filesystem
@@ -126,3 +105,15 @@ install/filesystem:
 ifeq (prod, $(APP_ENV))
 	chown -R 1000:1000 ./var
 endif
+
+## ----------------------------------------------------------
+## Dump
+## ----------------------------------------------------------
+.PHONY: dump/mysql restore/mysql
+
+dump/mysql:
+	docker exec ${DOCKER_DATABASE} bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
+	docker exec ${DOCKER_DATABASE} cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/$(MYSQL_DATABASE).sql"
+
+restore/mysql:
+	cat ./dump.sql | docker exec -i ${DOCKER_DATABASE} /usr/bin/mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE}

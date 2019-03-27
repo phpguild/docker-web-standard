@@ -19,6 +19,7 @@ install:
 	make install/proxy
 	make install/composer
 	make install/filesystem
+	make listening
 
 update:
 	make docker/down
@@ -26,10 +27,15 @@ update:
 	make docker/start
 	make install/composer
 	make install/filesystem
+	make listening
 
 restart:
 	make docker/down
 	make docker/start
+	make listening
+
+listening:
+	@echo "Server listening on http://127.0.0.1:${APP_PORT}"
 
 ## ----------------------------------------------------------
 ## Docker

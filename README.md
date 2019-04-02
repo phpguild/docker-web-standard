@@ -8,7 +8,7 @@ Docker installer for web app, include :
 
 ## Install
 
-    composer req phpguild/docker-web-standard --dev
+    composer req phpguild/docker-web-standard
 
 ## Configuration
 

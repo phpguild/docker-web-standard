@@ -1,0 +1,21 @@
+.PHONY: install update restart
+
+install:
+	make docker/start
+	make install/proxy
+	make install/composer
+	make install/filesystem
+	make listening
+
+update:
+	make docker/down
+	make update/git
+	make docker/start
+	make install/composer
+	make install/filesystem
+	make listening
+
+restart:
+	make docker/down
+	make docker/start
+	make listening

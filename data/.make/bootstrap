@@ -3,8 +3,10 @@ include .env
 include .env.local
 export
 
-DOCKER_PHP := ${APP_NAME}_php_${APP_INSTANCE}
-DOCKER_DATABASE := ${APP_NAME}_database_${APP_INSTANCE}
+CONTAINER_PHP := "php"
+CONTAINER_DATABASE := "database"
+DOCKER_PHP := "${APP_NAME}_${CONTAINER_PHP}_${APP_INSTANCE}"
+DOCKER_DATABASE := "${APP_NAME}_${CONTAINER_DATABASE}_${APP_INSTANCE}"
 
 ## ----------------------------------------------------------
 ## Status
@@ -21,9 +23,9 @@ listening:
 
 composer/install:
 ifeq (prod, $(APP_ENV))
-	docker exec ${DOCKER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+	docker-compose run --rm -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
 else
-	docker exec -u 1000 ${DOCKER_PHP} php -d memory_limit=-1 /usr/bin/composer update
+	docker-compose run --rm -u 1000 -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} php -d memory_limit=-1 /usr/bin/composer update
 endif
 
 ## ----------------------------------------------------------

@@ -1,0 +1,14 @@
+.PHONY: docker/start docker/stop docker/down
+
+docker/start:
+	docker-compose up -d --build --remove-orphans
+
+docker/stop:
+	docker-compose stop
+
+docker/down:
+	docker-compose down
+
+docker/restart:
+	make docker/stop
+	make docker/start

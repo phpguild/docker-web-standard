@@ -6,15 +6,38 @@ APP_NAME := myapp
 ## ----------------------------------------------------------
 ## Includes
 ## ----------------------------------------------------------
-include ./vendor/phpguild/docker-web-standard/makefile/bootstrap
-include ./vendor/phpguild/docker-web-standard/makefile/main
+include ./.make/*
+
+## ----------------------------------------------------------
+## Main
+## ----------------------------------------------------------
+.PHONY: install update restart
+
+install:
+	make docker/start
+	make proxy/install
+	make composer/install
+	make filesystem/install
+	make listening
+
+update:
+	make docker/down
+	make git/update
+	make docker/start
+	make composer/install
+	make filesystem/install
+	make listening
+
+restart:
+	make docker/restart
+	make listening
 
 ## ----------------------------------------------------------
 ## Filesystem
 ## ----------------------------------------------------------
-.PHONY: install/filesystem
+.PHONY: filesystem/install
 
-install/filesystem:
+filesystem/install:
 ifeq (prod, $(APP_ENV))
 	chown -R 1000:1000 ./var
 endif

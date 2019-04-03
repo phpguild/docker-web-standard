@@ -1,0 +1,8 @@
+.PHONY: mysql/dump mysql/restore
+
+mysql/dump:
+	docker exec ${DOCKER_DATABASE} bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
+	docker exec ${DOCKER_DATABASE} cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/$(MYSQL_DATABASE).sql"
+
+mysql/restore:
+	cat ./dump.sql | docker exec -i ${DOCKER_DATABASE} /usr/bin/mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE}

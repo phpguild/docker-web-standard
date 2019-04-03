@@ -6,7 +6,40 @@ export
 DOCKER_PHP := ${APP_NAME}_php_${APP_INSTANCE}
 DOCKER_DATABASE := ${APP_NAME}_database_${APP_INSTANCE}
 
+## ----------------------------------------------------------
+## Status
+## ----------------------------------------------------------
 .PHONY: listening
 
 listening:
 	@echo "Server listening on http://127.0.0.1:${APP_PORT}"
+
+## ----------------------------------------------------------
+## Composer
+## ----------------------------------------------------------
+.PHONY: composer/install
+
+composer/install:
+ifeq (prod, $(APP_ENV))
+	docker exec ${DOCKER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+else
+	docker exec -u 1000 ${DOCKER_PHP} php -d memory_limit=-1 /usr/bin/composer update
+endif
+
+## ----------------------------------------------------------
+## Docker
+## ----------------------------------------------------------
+.PHONY: docker/start docker/stop docker/down
+
+docker/start:
+	docker-compose up -d --build --remove-orphans
+
+docker/stop:
+	docker-compose stop
+
+docker/down:
+	docker-compose down
+
+docker/restart:
+	make docker/stop
+	make docker/start

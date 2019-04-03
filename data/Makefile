@@ -6,7 +6,7 @@ APP_NAME := myapp
 ## ----------------------------------------------------------
 ## Includes
 ## ----------------------------------------------------------
--include ./.make/*
+-include ./.make/bootstrap
 -include ./vendor/phpguild/docker-web-standard/.make/*
 
 ## ----------------------------------------------------------
@@ -16,8 +16,8 @@ APP_NAME := myapp
 
 install:
 	make docker/start
-	make proxy/install
 	make composer/install
+	make proxy/install
 	make filesystem/install
 	make listening
 

@@ -1,8 +1,0 @@
-.PHONY: composer/install
-
-composer/install:
-ifeq (prod, $(APP_ENV))
-	docker exec ${DOCKER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
-else
-	docker exec -u 1000 ${DOCKER_PHP} php -d memory_limit=-1 /usr/bin/composer update
-endif

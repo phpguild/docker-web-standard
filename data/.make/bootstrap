@@ -17,16 +17,30 @@ listening:
 	@echo "Server listening on http://127.0.0.1:${APP_PORT}"
 
 ## ----------------------------------------------------------
-## Composer
+## Main
 ## ----------------------------------------------------------
-.PHONY: composer/install
+.PHONY: install update restart
 
-composer/install:
-ifeq (prod, $(APP_ENV))
-	docker-compose run --rm -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
-else
-	docker-compose run --rm -u 1000 -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} php -d memory_limit=-1 /usr/bin/composer update
-endif
+install:
+	make docker/start
+	make composer/install
+	make proxy/install
+	make app/install
+	make filesystem/install
+	make listening
+
+update:
+	make docker/down
+	make git/update
+	make docker/start
+	make composer/install
+	make app/update
+	make filesystem/install
+	make listening
+
+restart:
+	make docker/restart
+	make listening
 
 ## ----------------------------------------------------------
 ## Docker
@@ -45,3 +59,25 @@ docker/down:
 docker/restart:
 	make docker/stop
 	make docker/start
+
+## ----------------------------------------------------------
+## Composer
+## ----------------------------------------------------------
+.PHONY: composer/install
+
+composer/install:
+ifeq (prod, $(APP_ENV))
+	docker-compose run --rm -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+else
+	docker-compose run --rm -u 1000 -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} php -d memory_limit=-1 /usr/bin/composer update
+endif
+
+## ----------------------------------------------------------
+## Filesystem
+## ----------------------------------------------------------
+.PHONY: filesystem/install
+
+filesystem/install:
+ifeq (prod, $(APP_ENV))
+	chown -R 1000:1000 ./var
+endif

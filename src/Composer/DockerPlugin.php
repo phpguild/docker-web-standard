@@ -56,7 +56,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $vendorDir = $this->composer->getConfig()->get('vendor-dir');
         $appDir = $vendorDir . '/..';
         $pluginDir = realpath(__DIR__) . '/../..';
-        $dataDir = $pluginDir . '/data';
+        $installDir = $pluginDir . '/install';
 
         $this->io->write('');
         if (file_exists($appDir . '/docker-compose.yml')) {
@@ -65,7 +65,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             return;
         }
 
-        (new Filesystem())->mirror($dataDir, $appDir);
+        (new Filesystem())->mirror($installDir, $appDir);
 
         $this->updateGitFile($appDir . '/.gitignore');
         $this->updateEnvFile($appDir . '/.env');

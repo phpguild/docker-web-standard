@@ -68,9 +68,9 @@ docker/restart:
 
 composer/install:
 ifeq (prod, $(APP_ENV))
-	docker-compose run --rm -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+	docker-compose run --rm --no-deps -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
 else
-	docker-compose run --rm -u 1000 -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} php -d memory_limit=-1 /usr/bin/composer update
+	docker-compose run --rm --no-deps -u 1000 -v "${SSH_AUTH_SOCK}:/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" ${CONTAINER_PHP} php -d memory_limit=-1 /usr/bin/composer update
 endif
 
 ## ----------------------------------------------------------

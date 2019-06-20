@@ -65,7 +65,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/var/www/data/composer
 ENV COMPOSER_CACHE_DIR=/var/www/data/composer/cache
 RUN curl -L "https://getcomposer.org/composer.phar" -o /usr/bin/composer \
-    && chmod +x /usr/bin/composer
+    && chmod +x /usr/bin/composer \
+    && /usr/bin/composer self-update
 
 # Clean
 RUN apt-get autoremove --purge -y \

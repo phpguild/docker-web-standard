@@ -50,6 +50,8 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * runScheduledTasks
+     *
+     * @throws \Exception
      */
     public function runScheduledTasks(): void
     {
@@ -61,23 +63,22 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $this->io->write('');
         if (file_exists($appDir . '/docker-compose.yml')) {
             $this->io->write('<fg=blue>[✓] Already exists docker-compose</fg=blue>');
-            $this->io->write('');
             return;
         }
 
         (new Filesystem())->mirror($installDir, $appDir);
 
-        $this->updateGitFile($appDir . '/.gitignore');
         $this->updateEnvFile($appDir . '/.env');
 
         $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
-        $this->io->write('');
     }
 
     /**
      * updateEnvFile
      *
      * @param string $file
+     *
+     * @throws \Exception
      */
     private function updateEnvFile(string $file): void
     {
@@ -86,31 +87,12 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             $data .=
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
-                'APP_PORT=8000' . PHP_EOL .
+                'APP_PORT=' . random_int(8000, 8999) . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'COMPOSE_PROJECT_NAME=myapp_live' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .
-                'MYSQL_ROOT_PASSWORD=password' . PHP_EOL .
+                'MYSQL_ROOT_PASSWORD=<insecure>' . PHP_EOL .
                 'MYSQL_DATABASE=myapp' . PHP_EOL .
-                '###< phpguild/docker-web-standard ###' . PHP_EOL
-            ;
-            file_put_contents($file, $data);
-        }
-    }
-
-    /**
-     * updateGitFile
-     *
-     * @param string $file
-     */
-    private function updateGitFile(string $file): void
-    {
-        $data = file_exists($file) ? file_get_contents($file) : '';
-        if (!preg_match('/###> phpguild\/docker-web-standard ###/', $data)) {
-            $data .=
-                PHP_EOL .
-                '###> phpguild/docker-web-standard ###' . PHP_EOL .
-                '/data/' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;
             file_put_contents($file, $data);

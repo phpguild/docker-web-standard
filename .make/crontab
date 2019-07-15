@@ -4,6 +4,5 @@ crontab/install:
 ifeq (prod, $(APP_ENV))
 ifeq ("$(wildcard /etc/cron.d/${APP_NAME}-$(APP_INSTANCE))","")
 	ln -s "${PWD}/config/crontab/$(APP_INSTANCE)" "/etc/cron.d/${APP_NAME}-$(APP_INSTANCE)"
-	crontab "/etc/cron.d/${APP_NAME}-$(APP_INSTANCE)"
 endif
 endif

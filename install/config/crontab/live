@@ -1,0 +1,1 @@
+0   5   *   *   *   bash /home/www/myapp.test/www/bin/console.sh mysql/dump > /home/www/myapp.test/www/var/log/mysql-dump.cron.log

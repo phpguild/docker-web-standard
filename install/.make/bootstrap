@@ -26,6 +26,7 @@ install:
 	make docker/start
 	make composer/install
 	make proxy/install
+	make crontab/install
 	make app/install
 	make filesystem/install
 	make listening

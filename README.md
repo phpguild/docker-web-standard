@@ -12,7 +12,7 @@ Docker installer for web app, include :
 
 ## Configuration
 
-Into `docker-compose.yml` and nginx config files, replace `myapp` by your project name.
+Into `docker-compose.yml`, `docker-compose.local.yml` and nginx config files, replace `myapp` by your project name.
 
 ## Usage
 

@@ -39,7 +39,7 @@ services:
       - "${PWD}/.env.local"
 
   database:
-    image: mariadb:10.3
+    image: mariadb:10.4
     container_name: "myapp_database_${APP_INSTANCE}"
     restart: always
     ports:

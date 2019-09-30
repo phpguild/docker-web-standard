@@ -20,6 +20,8 @@ services:
     env_file:
       - "${PWD}/.env"
       - "${PWD}/.env.local"
+    logging:
+      driver: none
 
   php:
     image: myapp_php
@@ -37,6 +39,8 @@ services:
     env_file:
       - "${PWD}/.env"
       - "${PWD}/.env.local"
+    logging:
+      driver: none
 
   database:
     image: mariadb:10.4
@@ -49,3 +53,5 @@ services:
     env_file:
       - "${PWD}/.env"
       - "${PWD}/.env.local"
+    logging:
+      driver: none

@@ -49,7 +49,7 @@ services:
         max-file: "10"
 
   database:
-    image: mariadb:10.4
+    image: mariadb:10.3
     container_name: "myapp_database_${APP_INSTANCE}"
     restart: always
     volumes:

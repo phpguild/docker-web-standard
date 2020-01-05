@@ -28,7 +28,7 @@
     "php": ">=7.1",
     "composer-plugin-api": "^1.1",
     "composer/composer": "^1.7.3",
-    "symfony/filesystem": "^4.1"
+    "symfony/filesystem": "^4.1|^5.0"
   },
   "config": {
     "sort-packages": true

@@ -1,4 +1,4 @@
-FROM nginx:1.17.6
+FROM mariadb:10.3.21
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
@@ -14,9 +14,6 @@ RUN rm /etc/localtime \
 # Update
 RUN rm -f /etc/apt/sources.list.d/*
 RUN apt-get update
-
-# Nginx Extra
-RUN apt-get install -y nginx-extras libnginx-mod-http-headers-more-filter
 
 # Clean
 RUN apt-get autoremove --purge -y \

@@ -1,9 +1,15 @@
-FROM php:7.2.24-fpm-buster
+FROM php:7.2.26-fpm-buster
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV
+ARG APP_TZ='Europe/Paris'
+
+# Timezone
+RUN rm /etc/localtime \
+    && ln -s /usr/share/zoneinfo/${APP_TZ} /etc/localtime \
+    && echo ${APP_TZ} > /etc/timezone
 
 # Update
 RUN rm -f /etc/apt/sources.list.d/*
@@ -53,11 +59,6 @@ RUN if [ "${APP_ENV}" = "prod" ] ; then \
     docker-php-ext-configure opcache --enable-opcache \
         && docker-php-ext-install opcache \
 ; fi
-
-# Timezone
-RUN rm /etc/localtime \
-    && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime \
-    && date
 
 # Composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser

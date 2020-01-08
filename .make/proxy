@@ -3,6 +3,7 @@
 proxy/install:
 ifeq (prod, $(APP_ENV))
 ifeq ("$(wildcard /etc/nginx/sites-enabled/${APP_NAME}.$(APP_INSTANCE).conf)","")
+	mkdir -p /etc/nginx/sites-enabled
 	ln -s "${PWD}/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/${APP_NAME}.$(APP_INSTANCE).conf"
 	service nginx reload
 endif

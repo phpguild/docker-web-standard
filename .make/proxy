@@ -5,4 +5,7 @@ ifeq ("$(wildcard /etc/nginx/sites-enabled/${APP_NAME}.$(APP_INSTANCE).conf)",""
 	mkdir -p /etc/nginx/sites-enabled
 	ln -s "${PWD}/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/${APP_NAME}.$(APP_INSTANCE).conf"
 	service nginx reload
+ifeq (dev, $(APP_ENV))
+	grep -q -F '127.0.0.1 ${APP_NAME}.test' /etc/hosts || echo '127.0.0.1 ${APP_NAME}.test' >> /etc/hosts
+endif
 endif

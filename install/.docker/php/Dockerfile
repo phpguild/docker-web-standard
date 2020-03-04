@@ -4,6 +4,7 @@ MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV
+ARG APP_UID
 ARG APP_TZ='Europe/Paris'
 
 # Timezone
@@ -79,10 +80,11 @@ RUN apt-get autoremove --purge -y \
 RUN echo "StrictHostKeyChecking no\nUserKnownHostsFile=/dev/null" >> /etc/ssh/ssh_config
 
 # Permissions
-RUN mkdir /home/www-data \
+RUN sed -i "s/www-data:x:1000:33/www-data:x:${APP_UID}:33/g" /etc/passwd
+    && mkdir /home/www-data \
     && chown -R www-data:www-data /home/www-data \
     && usermod -d /home/www-data www-data \
-    && usermod -u 1000 www-data
+    && usermod -u ${APP_UID} www-data
 
 # Workdir
 WORKDIR /var/www

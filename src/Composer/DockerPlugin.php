@@ -69,6 +69,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         (new Filesystem())->mirror($installDir, $appDir);
 
         $this->updateEnvFile($appDir . '/.env');
+        $this->updateEnvLocalFile($appDir . '/.env.local');
 
         $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
     }
@@ -91,10 +92,36 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_PORT=' . random_int(8000, 8999) . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_TZ=Europe/Paris' . PHP_EOL .
+                'APP_UID=1000' . PHP_EOL .
                 'COMPOSE_PROJECT_NAME=myapp_live' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=<insecure>' . PHP_EOL .
                 'MYSQL_DATABASE=myapp' . PHP_EOL .
+                '###< phpguild/docker-web-standard ###' . PHP_EOL
+            ;
+            file_put_contents($file, $data);
+        }
+    }
+
+    /**
+     * updateEnvLocalFile
+     *
+     * @param string $file
+     *
+     * @throws \Exception
+     */
+    private function updateEnvLocalFile(string $file): void
+    {
+        $data = file_exists($file) ? file_get_contents($file) : '';
+        if (!preg_match('/###> phpguild\/docker-web-standard ###/', $data)) {
+            $data .=
+                PHP_EOL .
+                '###> phpguild/docker-web-standard ###' . PHP_EOL .
+                'APP_ENV=dev' . PHP_EOL .
+                'APP_PORT=' . random_int(8000, 8999) . PHP_EOL .
+                'APP_INSTANCE=local' . PHP_EOL .
+                'COMPOSE_PROJECT_NAME=myapp_local' . PHP_EOL .
+                'COMPOSE_FILE=docker-compose.local.yml' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;
             file_put_contents($file, $data);

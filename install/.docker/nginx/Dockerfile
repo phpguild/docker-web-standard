@@ -4,6 +4,7 @@ MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV
+ARG APP_UID
 ARG APP_TZ='Europe/Paris'
 
 # Timezone
@@ -25,7 +26,7 @@ RUN apt-get autoremove --purge -y \
     && rm -rf /tmp/*
 
 # Permissions
-RUN usermod -u 1000 www-data
+RUN usermod -u ${APP_UID} www-data
 
 # Workdir
 WORKDIR /var/www

@@ -1,0 +1,24 @@
+.PHONY: setup/server setup/project
+
+setup/server:
+ifeq (, $(shell which nginx))
+	apt-get install -y nginx-extras
+endif
+ifeq (, $(shell which git))
+	apt-get install -y git
+endif
+ifeq (, $(shell which openssl))
+	apt-get install -y openssl
+endif
+	make ssl/install
+	make proxy/install
+
+setup/project:
+ifeq (dev, $(APP_ENV))
+ifneq (myapp, $(APP_NAME))
+	sed -i "s/myapp/${APP_NAME}/g" docker-compose.yml docker-compose.local.yml config/nginx/proxies/local.conf .env .env.local
+endif
+ifneq (, $(APP_PORT))
+	sed -i "s/127.0.0.1:8000/127.0.0.1:${APP_PORT}/g" config/nginx/proxies/local.conf
+endif
+endif

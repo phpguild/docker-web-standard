@@ -71,9 +71,9 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $this->updateEnvFile($appDir . '/.env');
         $this->updateEnvLocalFile($appDir . '/.env.local');
 
-        $dockerComposeLocal = file_get_contents($appDir . '/docker-compose.local.yaml');
+        $dockerComposeLocal = file_get_contents($appDir . '/docker-compose.local.yml');
         file_put_contents(
-            $appDir . '/docker-compose.local.yaml',
+            $appDir . '/docker-compose.local.yml',
             str_replace('3306:3306', random_int(33000, 33999) . ':3306', $dockerComposeLocal)
         );
 

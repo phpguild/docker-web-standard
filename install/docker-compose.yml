@@ -7,6 +7,7 @@ services:
       context: "${PWD}/.docker/nginx"
       args:
         APP_ENV: "${APP_ENV}"
+        APP_UID: "${APP_UID}"
         APP_TZ: "${APP_TZ}"
     container_name: "myapp_nginx_${APP_INSTANCE}"
     restart: always
@@ -33,6 +34,7 @@ services:
       context: "${PWD}/.docker/php"
       args:
         APP_ENV: "${APP_ENV}"
+        APP_UID: "${APP_UID}"
         APP_TZ: "${APP_TZ}"
     container_name: "myapp_php_${APP_INSTANCE}"
     restart: always
@@ -56,6 +58,7 @@ services:
       context: "${PWD}/.docker/mariadb"
       args:
         APP_ENV: "${APP_ENV}"
+        APP_UID: "${APP_UID}"
         APP_TZ: "${APP_TZ}"
     container_name: "myapp_database_${APP_INSTANCE}"
     restart: always

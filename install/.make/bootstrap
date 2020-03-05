@@ -16,6 +16,7 @@ DOCKER_DATABASE := "${APP_NAME}_${CONTAINER_DATABASE}_${APP_INSTANCE}"
 
 listening:
 	@echo "Server listening on http://127.0.0.1:${APP_PORT}"
+	@echo "Server listening on https://${APP_NAME}.test"
 
 ## ----------------------------------------------------------
 ## Main
@@ -29,6 +30,7 @@ install:
 	make crontab/install
 	make app/install
 	make filesystem/install
+	make proxy/restart
 	make listening
 
 update:
@@ -38,6 +40,7 @@ update:
 	make composer/install
 	make app/update
 	make filesystem/install
+	make proxy/restart
 	make listening
 
 restart:

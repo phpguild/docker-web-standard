@@ -3,8 +3,8 @@ FROM nginx:1.17.6
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
-ARG APP_ENV
-ARG APP_UID
+ARG APP_ENV='prod'
+ARG APP_UID=1000
 ARG APP_TZ='Europe/Paris'
 
 # Timezone

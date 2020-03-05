@@ -43,8 +43,8 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ScriptEvents::POST_INSTALL_CMD => 'runScheduledTasks',
-            ScriptEvents::POST_UPDATE_CMD => 'runScheduledTasks',
+            ScriptEvents::POST_INSTALL_CMD => [ 'runScheduledTasks', 50 ],
+            ScriptEvents::POST_UPDATE_CMD => [ 'runScheduledTasks', 50 ],
         ];
     }
 

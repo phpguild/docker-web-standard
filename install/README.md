@@ -1,18 +1,33 @@
 # Project
 
-## Install server
+## Installation
 
-1. If you want install a local server (with reverse proxy), run `sudo make setup/server`
+### 1. Require from composer
 
-## Install project stack
+    composer req phpguild/docker-web-standard
 
-1. Edit application name `APP_NAME := myapp` into `Makefile`
-2. Run `make install`
+### 2. Configure project
 
-## Restart project stack
+Edit application name `APP_NAME := myapp` into `Makefile`
 
-1. Run `make restart`
+    sed -i "s/myapp/new_app_name/g" Makefile
 
-## Down docker containers
+### 3. Install local server
 
-1. Run `make docker/down`
+If you want install a local server (with reverse proxy)
+
+    sudo make setup/server
+
+### 4. Install project stack
+
+    make install
+    
+## Usage
+
+### Restart project stack
+
+    make restart
+
+### Down docker containers
+
+    make docker/down

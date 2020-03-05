@@ -1,6 +1,7 @@
 .PHONY: setup/server setup/project
 
 setup/server:
+ifeq (0, $(shell id -u))
 ifeq (, $(shell which nginx))
 	apt-get install -y nginx-extras
 endif
@@ -10,8 +11,10 @@ endif
 ifeq (, $(shell which openssl))
 	apt-get install -y openssl
 endif
+endif
 	make ssl/install
 	make proxy/install
+	make proxy/restart
 
 setup/project:
 ifeq (dev, $(APP_ENV))

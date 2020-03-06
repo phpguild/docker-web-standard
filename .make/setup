@@ -19,9 +19,9 @@ endif
 setup/project:
 ifeq (dev, $(APP_ENV))
 ifneq (myapp, $(APP_NAME))
-	sed -i "s/myapp/${APP_NAME}/g" docker-compose.yml docker-compose.local.yml config/nginx/proxies/local.conf .env .env.local
+	sed -i "s/myapp/$(APP_NAME)/g" docker-compose.yml docker-compose.local.yml config/nginx/proxies/local.conf .env .env.local
 endif
 ifneq (, $(APP_PORT))
-	sed -i "s/127.0.0.1:8000/127.0.0.1:${APP_PORT}/g" config/nginx/proxies/local.conf
+	sed -i "s/127.0.0.1:8000/127.0.0.1:$(APP_PORT)/g" config/nginx/proxies/local.conf
 endif
 endif

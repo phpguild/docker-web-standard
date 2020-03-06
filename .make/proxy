@@ -1,0 +1,18 @@
+.PHONY: proxy/install proxy/restart
+
+proxy/install:
+ifeq (0, $(shell id -u))
+ifeq ("$(wildcard /etc/nginx/sites-enabled/${APP_NAME}.$(APP_INSTANCE).conf)","")
+ifeq (dev, $(APP_ENV))
+	grep -q -F '127.0.0.1 ${APP_NAME}.test' /etc/hosts || echo '127.0.0.1 ${APP_NAME}.test' >> /etc/hosts
+endif
+	mkdir -p /etc/nginx/sites-enabled
+	ln -s "${PWD}/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/${APP_NAME}.$(APP_INSTANCE).conf"
+endif
+endif
+
+proxy/restart:
+ifeq (0, $(shell id -u))
+	nginx -t
+	service nginx restart
+endif

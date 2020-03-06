@@ -1,0 +1,36 @@
+{
+  "name": "phpguild/docker-web-standard",
+  "license": "GPL-3.0-only",
+  "description": "Docker Web Standard",
+  "type": "composer-plugin",
+  "homepage": "https://github.com/phpguild/docker-web-standard",
+  "authors": [
+    {
+      "name": "Jonathan SAHM",
+      "email": "contact@johnstyle.fr"
+    }
+  ],
+  "support": {
+    "email": "contact@johnstyle.fr",
+    "issues": "https://github.com/phpguild/docker-web-standard/issues",
+    "wiki": "https://github.com/phpguild/docker-web-standard/wiki",
+    "source": "https://github.com/phpguild/docker-web-standard"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phpguild\\Docker\\": "src/"
+    }
+  },
+  "extra": {
+    "class": "Phpguild\\Docker\\Composer\\DockerPlugin"
+  },
+  "require": {
+    "php": ">=7.1",
+    "composer-plugin-api": "^1.1",
+    "composer/composer": "^1.7.3",
+    "symfony/filesystem": "^4.1|^5.0"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

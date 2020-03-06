@@ -1,0 +1,7 @@
+.PHONY: git/update
+
+git/update:
+	$(eval BRANCH := $(shell git rev-parse --abbrev-ref HEAD))
+	git fetch
+	git checkout "$(BRANCH)"
+	git reset --hard "origin/$(BRANCH)"

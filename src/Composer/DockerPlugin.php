@@ -60,9 +60,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $pluginDir = realpath(__DIR__) . '/../..';
         $installDir = $pluginDir . '/install';
 
-        $this->io->write('');
         if (file_exists($appDir . '/docker-compose.yml')) {
-            $this->io->write('<fg=blue>[✓] Already exists docker-compose</fg=blue>');
             return;
         }
 
@@ -77,7 +75,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             str_replace('3306:3306', random_int(33000, 33999) . ':3306', $dockerComposeLocal)
         );
 
-        $this->io->write('<fg=green>[✓] Install docker-compose</fg=green>');
+        $this->io->write('  - Installing recipe <fg=green>docker-compose</fg=green> ');
     }
 
     /**

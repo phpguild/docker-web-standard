@@ -1,0 +1,10 @@
+.PHONY: logrotate/install
+
+logrotate/install:
+ifeq (0, $(shell id -u))
+ifeq (prod, $(APP_ENV))
+ifeq ("$(wildcard /etc/logrotate.d/$(APP_NAME)-$(APP_INSTANCE))","")
+	ln -s "$(shell pwd)/config/logrotate/$(APP_INSTANCE)" "/etc/logrotate.d/$(APP_NAME)-$(APP_INSTANCE)"
+endif
+endif
+endif

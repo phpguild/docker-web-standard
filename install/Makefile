@@ -11,6 +11,7 @@ APP_NAME := myapp
 ###> phpguild/docker-web-standard ###
 -include ./vendor/phpguild/docker-web-standard/.make/crontab
 -include ./vendor/phpguild/docker-web-standard/.make/git
+-include ./vendor/phpguild/docker-web-standard/.make/logrotate
 -include ./vendor/phpguild/docker-web-standard/.make/mysql
 -include ./vendor/phpguild/docker-web-standard/.make/proxy
 -include ./vendor/phpguild/docker-web-standard/.make/setup

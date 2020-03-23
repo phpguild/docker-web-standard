@@ -28,6 +28,7 @@ install:
 	make docker/start
 	make composer/install
 	make crontab/install
+	make logrotate/install
 	make app/install
 	make filesystem/install
 	make proxy/restart

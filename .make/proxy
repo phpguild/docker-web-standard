@@ -7,6 +7,10 @@ ifeq (dev, $(APP_ENV))
 	grep -q -F '127.0.0.1 $(APP_NAME).test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).test' >> /etc/hosts
 endif
 	mkdir -p /etc/nginx/sites-enabled
+ifeq ("$(wildcard /etc/nginx/nginx.conf.save)","")
+	cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.save
+	cp $(shell pwd)/config/nginx/nginx.conf /etc/nginx/nginx.conf
+endif
 	ln -s "$(shell pwd)/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf"
 endif
 endif

@@ -24,13 +24,15 @@ listening:
 .PHONY: install update restart
 
 install:
-	make setup/project
 	make docker/start
 	make composer/install
+	make setup/server
+	make setup/project
 	make crontab/install
 	make logrotate/install
 	make app/install
 	make filesystem/install
+	make proxy/install
 	make proxy/restart
 	make listening
 

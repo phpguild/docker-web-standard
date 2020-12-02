@@ -20,18 +20,14 @@ RUN apt-get update
 RUN apt-get install -y git
 
 # PHP MbString
-RUN docker-php-ext-install mbstring
+RUN apt-get install -y libonig-dev \
+    && docker-php-ext-install mbstring
 
 # PHP MySql
 RUN docker-php-ext-install pdo_mysql
 
 # PHP Exif
 RUN docker-php-ext-install exif
-
-# PHP ZIP
-RUN apt-get install -y libzip-dev zip unzip \
-    && docker-php-ext-configure zip --with-libzip \
-    && docker-php-ext-install zip
 
 # PHP Intl
 RUN apt-get install -y libicu-dev \
@@ -40,7 +36,7 @@ RUN apt-get install -y libicu-dev \
 
 # PHP GD
 RUN apt-get install -y libfreetype6-dev libjpeg-dev libpng-dev libgd-dev \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/lib/ --with-jpeg-dir=/usr/lib/ --with-png-dir=/usr/lib/ --with-gd \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd
 
 # PHP Imagick

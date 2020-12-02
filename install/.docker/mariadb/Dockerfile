@@ -1,4 +1,4 @@
-FROM mariadb:10.5.5
+FROM mariadb:10.5.8
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 

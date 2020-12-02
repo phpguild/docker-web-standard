@@ -46,9 +46,16 @@ update:
 	make proxy/restart
 	make listening
 
+start:
+	make docker/start
+	make listening
+
 restart:
 	make docker/restart
 	make listening
+
+down:
+	make docker/down
 
 ## ----------------------------------------------------------
 ## Docker

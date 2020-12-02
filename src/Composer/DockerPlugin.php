@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phpguild\Docker\Composer;
 
 use Composer\Composer;
@@ -11,16 +13,15 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class DockerPlugin
- * @package Phpguild\Docker\Composer
  */
 class DockerPlugin implements PluginInterface, EventSubscriberInterface
 {
     public const PACKAGE_NAME = 'phpguild/docker';
 
-    /** @var Composer */
+    /** @var Composer $composer */
     protected $composer;
 
-    /** @var IOInterface */
+    /** @var IOInterface $io */
     protected $io;
 
     /**
@@ -36,9 +37,31 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
+     * uninstall
+     *
+     * @param Composer    $composer
+     * @param IOInterface $io
+     */
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+        // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * deactivate
+     *
+     * @param Composer    $composer
+     * @param IOInterface $io
+     */
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+        // TODO: Implement deactivate() method.
+    }
+
+    /**
      * getSubscribedEvents
      *
-     * @return array
+     * @return array[]
      */
     public static function getSubscribedEvents(): array
     {

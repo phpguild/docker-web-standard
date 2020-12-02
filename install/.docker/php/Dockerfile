@@ -1,4 +1,4 @@
-FROM php:7.4.9-fpm-buster
+FROM php:7.4.13-fpm-buster
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
@@ -29,10 +29,13 @@ RUN docker-php-ext-install pdo_mysql
 # PHP Exif
 RUN docker-php-ext-install exif
 
+# PHP ZIP
+RUN apt-get install -y libzip-dev zip unzip \
+    && docker-php-ext-install zip
+
 # PHP Intl
 RUN apt-get install -y libicu-dev \
-    && docker-php-ext-install intl \
-    && docker-php-ext-configure intl
+    && docker-php-ext-install intl
 
 # PHP GD
 RUN apt-get install -y libfreetype6-dev libjpeg-dev libpng-dev libgd-dev \

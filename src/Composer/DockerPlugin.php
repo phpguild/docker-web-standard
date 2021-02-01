@@ -24,6 +24,9 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
     /** @var IOInterface $io */
     protected $io;
 
+    /** @var array $config */
+    protected $config;
+
     /**
      * activate
      *
@@ -87,18 +90,62 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             return;
         }
 
+        $this->config = [
+            'APP_PORT_LIVE' => random_int(8000, 8999),
+            'APP_PORT_STAGING' => random_int(8000, 8999),
+            'APP_PORT_TEST' => random_int(8000, 8999),
+            'APP_PORT_LOCAL' => random_int(8000, 8999),
+            'MYSQL_PORT_LOCAL' => random_int(33000, 33999),
+        ];
+
         (new Filesystem())->mirror($installDir, $appDir);
 
         $this->updateEnvFile($appDir . '/.env');
         $this->updateEnvLocalFile($appDir . '/.env.local');
 
-        $dockerComposeLocal = file_get_contents($appDir . '/docker-compose.local.yml');
-        file_put_contents(
+        $this->searchAndReplace(
             $appDir . '/docker-compose.local.yml',
-            str_replace('3306:3306', random_int(33000, 33999) . ':3306', $dockerComposeLocal)
+            '3306:3306',
+            $this->config['MYSQL_PORT_LOCAL'] . ':3306'
+        );
+
+        $this->searchAndReplace(
+            $appDir . '/config/nginx/proxies/local.conf',
+            '127.0.0.1:8000',
+            '127.0.0.1:' . $this->config['APP_PORT_LOCAL']
+        );
+
+        $this->searchAndReplace(
+            $appDir . '/config/nginx/proxies/test.conf',
+            '127.0.0.1:8000',
+            '127.0.0.1:' . $this->config['APP_PORT_TEST']
+        );
+
+        $this->searchAndReplace(
+            $appDir . '/config/nginx/proxies/staging.conf',
+            '127.0.0.1:8000',
+            '127.0.0.1:' . $this->config['APP_PORT_STAGING']
+        );
+
+        $this->searchAndReplace(
+            $appDir . '/config/nginx/proxies/live.conf',
+            '127.0.0.1:8000',
+            '127.0.0.1:' . $this->config['APP_PORT_LIVE']
         );
 
         $this->io->write('  - Installing recipe <fg=green>docker-compose</fg=green> ');
+    }
+
+    /**
+     * searchAndReplace
+     *
+     * @param string $file
+     * @param string $search
+     * @param string $replace
+     */
+    private function searchAndReplace(string $file, string $search, string $replace): void
+    {
+        file_put_contents($file, str_replace($search, $replace, file_get_contents($file)));
     }
 
     /**
@@ -116,7 +163,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
                 'APP_ENV=prod' . PHP_EOL .
-                'APP_PORT=' . random_int(8000, 8999) . PHP_EOL .
+                'APP_PORT=' . $this->config['APP_PORT_LIVE'] . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_TZ=Europe/Paris' . PHP_EOL .
                 'APP_UID=1000' . PHP_EOL .
@@ -145,7 +192,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
                 'APP_ENV=dev' . PHP_EOL .
-                'APP_PORT=' . random_int(8000, 8999) . PHP_EOL .
+                'APP_PORT=' . $this->config['APP_PORT_LOCAL'] . PHP_EOL .
                 'APP_INSTANCE=local' . PHP_EOL .
                 'COMPOSE_PROJECT_NAME=myapp_local' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.local.yml' . PHP_EOL .

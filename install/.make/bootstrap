@@ -16,7 +16,7 @@ DOCKER_DATABASE := "$(APP_NAME)_$(CONTAINER_DATABASE)_$(APP_INSTANCE)"
 
 listening:
 	@echo "Server listening on http://127.0.0.1:$(APP_PORT)"
-	@echo "Server listening on https://$(APP_NAME).test"
+	@echo "Server listening on https://$(APP_NAME).local.test"
 
 ## ----------------------------------------------------------
 ## Main

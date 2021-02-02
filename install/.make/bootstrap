@@ -8,6 +8,7 @@ CONTAINER_PHP := php
 CONTAINER_DATABASE := database
 DOCKER_PHP := "$(APP_NAME)_$(CONTAINER_PHP)_$(APP_INSTANCE)"
 DOCKER_DATABASE := "$(APP_NAME)_$(CONTAINER_DATABASE)_$(APP_INSTANCE)"
+SUDO=$(shell sh -c "if [ 0 != $EUID ]; then echo 'sudo'; fi")
 
 ## ----------------------------------------------------------
 ## Status
@@ -101,5 +102,5 @@ endif
 
 filesystem/install:
 ifeq (prod, $(APP_ENV))
-	chown -R $(APP_UID):$(APP_UID) ./var
+	${SUDO} chown -R $(APP_UID):$(APP_UID) ./var
 endif

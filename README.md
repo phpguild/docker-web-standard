@@ -16,7 +16,7 @@ Docker installer for web app, include :
 
 Edit application name `APP_NAME := myapp` into `Makefile`
 
-    sed -i "s/myapp/new_app_name/g" Makefile
+    sed -i'' "s/myapp/new_app_name/g" Makefile
 
 ### 3. Install local server
 

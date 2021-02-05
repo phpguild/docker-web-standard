@@ -19,6 +19,6 @@ endif
 setup/project:
 ifeq (dev, $(APP_ENV))
 ifneq (myapp, $(APP_NAME))
-	sed -i "s/myapp/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env*
+	sed -i'' "s/myapp/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env*
 endif
 endif

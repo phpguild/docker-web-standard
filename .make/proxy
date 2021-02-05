@@ -4,6 +4,7 @@ proxy/install:
 ifeq (0, $(shell id -u))
 ifeq ("$(wildcard /etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf)","")
 ifeq (dev, $(APP_ENV))
+	grep -q -F '127.0.0.1 $(APP_NAME).local.test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).local.test' >> /etc/hosts
 	grep -q -F '127.0.0.1 $(APP_NAME).test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).test' >> /etc/hosts
 endif
 	mkdir -p /etc/nginx/sites-enabled

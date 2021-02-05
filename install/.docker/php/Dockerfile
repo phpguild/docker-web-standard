@@ -24,7 +24,7 @@ RUN apt-get install -y libonig-dev \
     && docker-php-ext-install mbstring
 
 # PHP MySql
-RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pdo_mysql mysqli
 
 # PHP Exif
 RUN docker-php-ext-install exif

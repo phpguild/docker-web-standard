@@ -22,10 +22,10 @@ listening:
 ## ----------------------------------------------------------
 ## Main
 ## ----------------------------------------------------------
-.PHONY: install update restart
+.PHONY: install update update-force start start-build restart restart-force stop down
 
 install:
-	make docker/start
+	make docker/start-build
 	make composer/install
 	make setup/server
 	make setup/project
@@ -38,9 +38,19 @@ install:
 	make listening
 
 update:
-	make docker/down
+	make docker/stop
 	make git/update
 	make docker/start
+	make composer/install
+	make app/update
+	make filesystem/install
+	make proxy/restart
+	make listening
+
+update-force:
+	make docker/down
+	make git/update
+	make docker/start-build
 	make composer/install
 	make app/update
 	make filesystem/install
@@ -51,9 +61,20 @@ start:
 	make docker/start
 	make listening
 
+start-build:
+	make docker/start-build
+	make listening
+
 restart:
 	make docker/restart
 	make listening
+
+restart-force:
+	make docker/restart-force
+	make listening
+
+stop:
+	make docker/stop
 
 down:
 	make docker/down
@@ -61,9 +82,15 @@ down:
 ## ----------------------------------------------------------
 ## Docker
 ## ----------------------------------------------------------
-.PHONY: docker/start docker/stop docker/down
+.PHONY: docker/build docker/start docker/start-build docker/stop docker/down docker/restart docker/restart-force
+
+docker/build:
+	docker-compose build --no-cache
 
 docker/start:
+	docker-compose up -d --remove-orphans
+
+docker/start-build:
 	docker-compose up -d --build --remove-orphans
 
 docker/stop:
@@ -76,6 +103,10 @@ docker/restart:
 	make docker/stop
 	make docker/start
 
+docker/restart-force:
+	make docker/down
+	make docker/start-build
+
 ## ----------------------------------------------------------
 ## Composer
 ## ----------------------------------------------------------
@@ -83,14 +114,14 @@ docker/restart:
 
 composer/install:
 ifeq (prod, $(APP_ENV))
-	docker-compose run --rm --no-deps -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
 else
 	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer install
 endif
 
 composer/update:
 ifeq (prod, $(APP_ENV))
-	docker-compose run --rm --no-deps -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v update"
+	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v update"
 else
 	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer update
 endif

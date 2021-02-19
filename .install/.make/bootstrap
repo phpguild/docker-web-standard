@@ -1,0 +1,101 @@
+-include .env
+-include .env.local
+-include .env.$(APP_ENV)
+-include .env.$(APP_ENV).local
+export
+
+CONTAINER_PHP := php
+CONTAINER_DATABASE := database
+DOCKER_PHP := "$(APP_NAME)_$(CONTAINER_PHP)_$(APP_INSTANCE)"
+DOCKER_DATABASE := "$(APP_NAME)_$(CONTAINER_DATABASE)_$(APP_INSTANCE)"
+SUDO=$(shell sh -c "if [ 0 != $EUID ]; then echo 'sudo'; fi")
+KERNEL=$(shell sh -c "uname")
+
+###> phpguild/docker-web-standard ###
+-include ./vendor/phpguild/docker-web-standard/.make/docker
+-include ./vendor/phpguild/docker-web-standard/.make/composer
+-include ./vendor/phpguild/docker-web-standard/.make/listening
+###< phpguild/docker-web-standard ###
+
+## ----------------------------------------------------------
+## Main
+## ----------------------------------------------------------
+.PHONY: install postinstall update update-force start start-build restart restart-force stop down
+
+install:
+ifneq (__dwsmyapp__, $(APP_NAME))
+	make _preinstall
+	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
+	make docker/start-build
+	make composer/install
+	make setup/server
+	make crontab/install
+	make logrotate/install
+	make app/install
+	make filesystem/install
+	make proxy/install
+	make proxy/restart
+	make _postinstall
+	make listening
+endif
+
+_preinstall:
+ifneq ("$(wildcard .install/src/*)","")
+	cp -frT .install/src public
+endif
+
+_postinstall:
+
+update:
+	make docker/stop
+	make git/update
+	make docker/start
+	make composer/install
+	make app/update
+	make filesystem/install
+	make proxy/restart
+	make listening
+
+update-force:
+	make docker/down
+	make git/update
+	make docker/start-build
+	make composer/install
+	make app/update
+	make filesystem/install
+	make proxy/restart
+	make listening
+
+start:
+	make docker/start
+	make listening
+
+start-build:
+	make docker/start-build
+	make listening
+
+restart:
+	make docker/restart
+	make listening
+
+restart-force:
+	make docker/restart-force
+	make listening
+
+stop:
+	make docker/stop
+
+down:
+	make docker/down
+
+## ----------------------------------------------------------
+## Filesystem
+## ----------------------------------------------------------
+.PHONY: filesystem/install
+
+filesystem/install:
+ifeq (sudo, $(SUDO))
+ifeq (prod, $(APP_ENV))
+	$(SUDO) chown -R $(APP_UID):$(APP_UID) ./var
+endif
+endif

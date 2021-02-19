@@ -1,1 +1,0 @@
-0	5	*	*	*	root	(echo "\n----------" && date && echo "----------" && bash /home/www/myapp.test/www/bin/console.sh mysql/dump) >> /home/www/myapp.test/www/var/log/mysql-dump.cron.log

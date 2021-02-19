@@ -84,7 +84,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $vendorDir = $this->composer->getConfig()->get('vendor-dir');
         $appDir = $vendorDir . '/..';
         $pluginDir = realpath(__DIR__) . '/../..';
-        $installDir = $pluginDir . '/install';
+        $installDir = $pluginDir . '/.install';
 
         if (file_exists($appDir . '/docker-compose.yml')) {
             return;
@@ -105,7 +105,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
 
         $this->searchAndReplace(
             $appDir . '/docker-compose.local.yml',
-            '3306:3306',
+            '33306:3306',
             $this->config['MYSQL_PORT_LOCAL'] . ':3306'
         );
 
@@ -162,15 +162,16 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             $data .=
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
+                'APP_NAME=__dwsmyapp__' . PHP_EOL .
                 'APP_ENV=prod' . PHP_EOL .
                 'APP_PORT=' . $this->config['APP_PORT_LIVE'] . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_TZ=Europe/Paris' . PHP_EOL .
                 'APP_UID=1000' . PHP_EOL .
-                'COMPOSE_PROJECT_NAME=myapp_live' . PHP_EOL .
+                'COMPOSE_PROJECT_NAME=__dwsmyapp___live' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=<insecure>' . PHP_EOL .
-                'MYSQL_DATABASE=myapp' . PHP_EOL .
+                'MYSQL_DATABASE=__dwsmyapp__' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;
             file_put_contents($file, $data);
@@ -194,7 +195,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_ENV=dev' . PHP_EOL .
                 'APP_PORT=' . $this->config['APP_PORT_LOCAL'] . PHP_EOL .
                 'APP_INSTANCE=local' . PHP_EOL .
-                'COMPOSE_PROJECT_NAME=myapp_local' . PHP_EOL .
+                'COMPOSE_PROJECT_NAME=__dwsmyapp___local' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.local.yml' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;

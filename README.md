@@ -2,38 +2,24 @@
 
 Docker installer for web app, include :
 
-- PHP 7.2
-- MariaDB 10.3
-- Nginx 1.17
+- PHP 7.4.15
+- MariaDB 10.5.8
+- Nginx 1.19.6
 
-## Installation
-
-### 1. Require from composer
+## Require from composer
 
     composer req phpguild/docker-web-standard
 
-### 2. Configure project
+## Installation
 
-Edit application name `APP_NAME := myapp` into `Makefile`
+    make -e APP_NAME=__dwsmyapp__ install
 
-    sed -i'' "s/myapp/new_app_name/g" Makefile
-
-### 3. Install local server
-
-If you want install a local server (with reverse proxy)
-
-    sudo make setup/server
-
-### 4. Install project stack
-
-    make install
-    
 ## Usage
 
-### Restart project stack
+### Restart
 
     make restart
 
-### Down docker containers
+### Down
 
-    make docker/down
+    make down

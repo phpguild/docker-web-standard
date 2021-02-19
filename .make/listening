@@ -1,0 +1,5 @@
+.PHONY: listening
+
+listening:
+	@echo "Server listening on http://127.0.0.1:$(APP_PORT)"
+	@echo "Server listening on https://$(APP_NAME).local.test"

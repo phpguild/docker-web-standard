@@ -1,24 +1,17 @@
-.PHONY: setup/server setup/project
+.PHONY: setup/server
 
 setup/server:
-ifeq (0, $(shell id -u))
-ifeq (, $(shell which nginx))
-	apt-get install -y nginx-extras
+ifeq (sudo, $(SUDO))
+ifeq (, $(shell $(SUDO) which nginx))
+	$(SUDO) apt-get install -y nginx
 endif
-ifeq (, $(shell which git))
-	apt-get install -y git
+ifeq (, $(shell $(SUDO) which git))
+	$(SUDO) apt-get install -y git
 endif
-ifeq (, $(shell which openssl))
-	apt-get install -y openssl
+ifeq (, $(shell $(SUDO) which openssl))
+	$(SUDO) apt-get install -y openssl
 endif
 endif
 	make ssl/install
 	make proxy/install
 	make proxy/restart
-
-setup/project:
-ifeq (dev, $(APP_ENV))
-ifneq (myapp, $(APP_NAME))
-	sed -i'' "s/myapp/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env*
-endif
-endif

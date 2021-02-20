@@ -20,15 +20,30 @@ KERNEL=$(shell sh -c "uname")
 ## ----------------------------------------------------------
 ## Main
 ## ----------------------------------------------------------
-.PHONY: install postinstall update update-force start start-build restart restart-force stop down
+.PHONY: install update update-force start start-build restart restart-force stop down
+
+_preinstall:
+	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
+ifneq ("$(wildcard .install/src/*)","")
+	cp -frT .install/src public
+endif
+
+_dockerinstall:
+	docker-compose build
+
+_composerinstall:
+	docker-compose run --rm --no-deps -u $(APP_UID) $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer install --no-dev
+
+_postinstall:
 
 install:
 ifneq (__dwsmyapp__, $(APP_NAME))
 	make _preinstall
-	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
-	make docker/start-build
-	make composer/install
+	make _dockerinstall
+	make _composerinstall
 	make setup/server
+	make docker/start && echo "Waiting MySQL..." && sleep 20
+	make composer/install
 	make crontab/install
 	make logrotate/install
 	make app/install
@@ -38,13 +53,6 @@ ifneq (__dwsmyapp__, $(APP_NAME))
 	make _postinstall
 	make listening
 endif
-
-_preinstall:
-ifneq ("$(wildcard .install/src/*)","")
-	cp -frT .install/src public
-endif
-
-_postinstall:
 
 update:
 	make docker/stop

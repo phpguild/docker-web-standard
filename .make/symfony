@@ -1,0 +1,46 @@
+.PHONY: symfony/cc symfony/ddc symfony/ddd symfony/dsc symfony/dsdf symfony/dsuf symfony/dsuds symfony/dsv symfony/dfl symfony/dmm symfony/dmd symfony/dmds symfony/dmg symfony/hfl symfony/ai
+
+symfony/cc:
+	docker exec ${DOCKER_PHP} php ./bin/console cache:clear
+
+symfony/ddc:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:database:create
+
+symfony/ddd:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:database:drop
+
+symfony/dsc:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:schema:create
+
+symfony/dsdf:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:schema:drop --force
+
+symfony/dsuf:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:schema:update --force
+
+symfony/dsuds:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:schema:update --dump-sql
+
+symfony/dsv:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:schema:validate
+
+symfony/dfl:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:fixtures:load --no-interaction
+
+symfony/dmm:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:migration:migrate --no-interaction
+
+symfony/dmd:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:migrations:diff
+
+symfony/dmds:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:migrations:dump-schema
+
+symfony/dmg:
+	docker exec ${DOCKER_PHP} php ./bin/console doctrine:migrations:generate
+
+symfony/hfl:
+	docker exec ${DOCKER_PHP} php ./bin/console hautelook:fixtures:load --no-interaction
+
+symfony/ai:
+	docker exec ${DOCKER_PHP} php ./bin/console assets:install

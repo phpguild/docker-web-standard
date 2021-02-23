@@ -8,6 +8,7 @@ CONTAINER_PHP := php
 CONTAINER_DATABASE := database
 DOCKER_PHP := "$(APP_NAME)_$(CONTAINER_PHP)_$(APP_INSTANCE)"
 DOCKER_DATABASE := "$(APP_NAME)_$(CONTAINER_DATABASE)_$(APP_INSTANCE)"
+COMPOSE_PROJECT_NAME := "$(APP_NAME)_$(APP_INSTANCE)"
 SUDO=$(shell sh -c "if [ 0 != $EUID ]; then echo 'sudo'; fi")
 KERNEL=$(shell sh -c "uname")
 
@@ -24,9 +25,6 @@ KERNEL=$(shell sh -c "uname")
 
 _preinstall:
 	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
-ifneq ("$(wildcard .install/src/*)","")
-	cp -frT .install/src public
-endif
 
 _dockerinstall:
 	docker-compose build

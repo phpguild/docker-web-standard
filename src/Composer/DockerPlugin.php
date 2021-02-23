@@ -164,11 +164,12 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
                 'APP_NAME=__dwsmyapp__' . PHP_EOL .
                 'APP_ENV=prod' . PHP_EOL .
+                'APP_DEBUG=0' . PHP_EOL .
+                'APP_SECRET=<insecure>' . PHP_EOL .
                 'APP_PORT=' . $this->config['APP_PORT_LIVE'] . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_TZ=Europe/Paris' . PHP_EOL .
                 'APP_UID=1000' . PHP_EOL .
-                'COMPOSE_PROJECT_NAME=__dwsmyapp___live' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=<insecure>' . PHP_EOL .
                 'MYSQL_DATABASE=__dwsmyapp__' . PHP_EOL .
@@ -193,9 +194,9 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 PHP_EOL .
                 '###> phpguild/docker-web-standard ###' . PHP_EOL .
                 'APP_ENV=dev' . PHP_EOL .
+                'APP_DEBUG=1' . PHP_EOL .
                 'APP_PORT=' . $this->config['APP_PORT_LOCAL'] . PHP_EOL .
                 'APP_INSTANCE=local' . PHP_EOL .
-                'COMPOSE_PROJECT_NAME=__dwsmyapp___local' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.local.yml' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;

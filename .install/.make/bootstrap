@@ -100,8 +100,6 @@ down:
 .PHONY: filesystem/install
 
 filesystem/install:
-ifeq (sudo, $(SUDO))
 ifeq (prod, $(APP_ENV))
 	$(SUDO) chown -R $(APP_UID):$(APP_UID) ./var
-endif
 endif

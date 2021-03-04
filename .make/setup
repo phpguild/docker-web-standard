@@ -1,15 +1,6 @@
 .PHONY: setup/server
 
 setup/server:
-ifeq (, $(shell $(SUDO) which nginx))
-	$(SUDO) apt-get install -y nginx
-endif
-ifeq (, $(shell $(SUDO) which git))
-	$(SUDO) apt-get install -y git
-endif
-ifeq (, $(shell $(SUDO) which openssl))
-	$(SUDO) apt-get install -y openssl
-endif
 	make ssl/install
 	make proxy/install
 	make proxy/restart

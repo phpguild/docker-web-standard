@@ -2,6 +2,7 @@
 
 proxy/install:
 ifeq ("$(wildcard /etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf)","")
+	$(SUDO) which nginx || $(SUDO) apt-get install -y nginx
 ifeq (dev, $(APP_ENV))
 	$(SUDO) sh -c "grep -q -F '127.0.0.1 $(APP_NAME).local.test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).local.test' >> /etc/hosts"
 endif

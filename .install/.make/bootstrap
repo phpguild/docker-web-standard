@@ -21,7 +21,7 @@ KERNEL := $(shell sh -c "uname")
 ## ----------------------------------------------------------
 ## Main
 ## ----------------------------------------------------------
-.PHONY: install update update-force start start-build restart restart-force stop down
+.PHONY: install update update-force start start-build restart restart-force stop down dump
 
 _preinstall:
 	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
@@ -93,6 +93,10 @@ stop:
 
 down:
 	make docker/down
+
+dump:
+	make filesystem/dump
+	make mysql/dump
 
 ## ----------------------------------------------------------
 ## Filesystem

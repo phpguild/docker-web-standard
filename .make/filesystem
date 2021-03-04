@@ -1,0 +1,10 @@
+.PHONY: filesystem/backup filesystem/restore
+
+filesystem/dump:
+	tar -pzcvf ./data/backup/public.tar.gz --exclude='*/cache*' ./public
+	cp ./data/backup/public.tar.gz "./data/backup/public_`date +%H`.tar.gz"
+
+filesystem/restore:
+ifneq ("$(wildcard ./data/backup/public.tar.gz)","")
+	tar -zxvf ./data/backup/public.tar.gz
+endif

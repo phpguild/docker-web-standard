@@ -14,6 +14,16 @@
 ###< phpguild/docker-web-standard ###
 
 ## ----------------------------------------------------------
+## Filesystem
+## ----------------------------------------------------------
+.PHONY: filesystem/install
+
+filesystem/install:
+ifeq (prod, $(APP_ENV))
+	$(SUDO) chown -R $(APP_UID):$(APP_UID) ./var
+endif
+
+## ----------------------------------------------------------
 ## APP
 ## ----------------------------------------------------------
 .PHONY: app/install app/update

@@ -91,9 +91,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         }
 
         $this->config = [
-            'APP_PORT_LIVE' => random_int(8000, 8999),
-            'APP_PORT_STAGING' => random_int(8000, 8999),
-            'APP_PORT_TEST' => random_int(8000, 8999),
             'APP_PORT_LOCAL' => random_int(8000, 8999),
             'MYSQL_PORT_LOCAL' => random_int(33000, 33999),
         ];
@@ -113,24 +110,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
             $appDir . '/config/nginx/proxies/local.conf',
             '127.0.0.1:8000',
             '127.0.0.1:' . $this->config['APP_PORT_LOCAL']
-        );
-
-        $this->searchAndReplace(
-            $appDir . '/config/nginx/proxies/test.conf',
-            '127.0.0.1:8000',
-            '127.0.0.1:' . $this->config['APP_PORT_TEST']
-        );
-
-        $this->searchAndReplace(
-            $appDir . '/config/nginx/proxies/staging.conf',
-            '127.0.0.1:8000',
-            '127.0.0.1:' . $this->config['APP_PORT_STAGING']
-        );
-
-        $this->searchAndReplace(
-            $appDir . '/config/nginx/proxies/live.conf',
-            '127.0.0.1:8000',
-            '127.0.0.1:' . $this->config['APP_PORT_LIVE']
         );
 
         $this->io->write('  - Installing recipe <fg=green>docker-compose</fg=green> ');
@@ -166,7 +145,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_ENV=prod' . PHP_EOL .
                 'APP_DEBUG=0' . PHP_EOL .
                 'APP_SECRET=<insecure>' . PHP_EOL .
-                'APP_PORT=' . $this->config['APP_PORT_LIVE'] . PHP_EOL .
+                'APP_PORT=8000' . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_TZ=Europe/Paris' . PHP_EOL .
                 'APP_UID=1000' . PHP_EOL .

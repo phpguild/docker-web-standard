@@ -35,7 +35,7 @@ _composerinstall:
 _postinstall:
 
 install:
-ifneq (__dwsmyapp__, $(APP_NAME))
+ifneq ($(APP_NAME),__dwsmyapp__)
 	make _preinstall
 	make _dockerinstall
 	make _composerinstall

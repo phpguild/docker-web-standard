@@ -13,11 +13,11 @@ mysql/dump-schema:
 	docker exec $(DOCKER_DATABASE) cat "/tmp/$(MYSQL_DATABASE).schema.sql" > "./data/backup/$(MYSQL_DATABASE).schema.sql"
 
 mysql/restore:
-ifneq ("$(wildcard ./data/backup/$(MYSQL_DATABASE).sql)","")
+ifneq ($(wildcard "./data/backup/$(MYSQL_DATABASE).sql"),)
 	cat "./data/backup/$(MYSQL_DATABASE).sql" | docker exec -i $(DOCKER_DATABASE) /usr/bin/mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)"
 endif
 
 mysql/patch:
-ifneq ("$(wildcard ./config/mysql/patch.$(APP_INSTANCE).sql)","")
+ifneq ($(wildcard "./config/mysql/patch.$(APP_INSTANCE).sql"),)
 	cat "./config/mysql/patch.$(APP_INSTANCE).sql" | docker exec -i $(DOCKER_DATABASE) /usr/bin/mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" $(MYSQL_DATABASE)
 endif

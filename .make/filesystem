@@ -5,6 +5,6 @@ filesystem/dump:
 	cp ./data/backup/public.tar.gz "./data/backup/public_`date +%H`.tar.gz"
 
 filesystem/restore:
-ifneq ("$(wildcard ./data/backup/public.tar.gz)","")
+ifneq ($(wildcard ./data/backup/public.tar.gz),)
 	tar -zxvf ./data/backup/public.tar.gz
 endif

@@ -1,8 +1,8 @@
 .PHONY: crontab/install
 
 crontab/install:
-ifeq (prod, $(APP_ENV))
-ifeq ("$(wildcard /etc/cron.d/$(APP_NAME)-$(APP_INSTANCE))","")
+ifeq ($(APP_ENV), prod)
+ifeq ($(wildcard "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)"),)
 	$(SUDO) ln -s "$(shell pwd)/config/crontab/$(APP_INSTANCE)" "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)"
 endif
 endif

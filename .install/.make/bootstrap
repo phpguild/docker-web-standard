@@ -13,9 +13,17 @@ SUDO := $(shell sh -c "if [ 0 != $EUID ]; then echo 'sudo'; fi")
 KERNEL := $(shell sh -c "uname")
 
 ###> phpguild/docker-web-standard ###
--include ./vendor/phpguild/docker-web-standard/.make/docker
 -include ./vendor/phpguild/docker-web-standard/.make/composer
+-include ./vendor/phpguild/docker-web-standard/.make/crontab
+-include ./vendor/phpguild/docker-web-standard/.make/docker
+-include ./vendor/phpguild/docker-web-standard/.make/filesystem
+-include ./vendor/phpguild/docker-web-standard/.make/git
 -include ./vendor/phpguild/docker-web-standard/.make/listening
+-include ./vendor/phpguild/docker-web-standard/.make/logrotate
+-include ./vendor/phpguild/docker-web-standard/.make/mysql
+-include ./vendor/phpguild/docker-web-standard/.make/proxy
+-include ./vendor/phpguild/docker-web-standard/.make/setup
+-include ./vendor/phpguild/docker-web-standard/.make/ssl
 ###< phpguild/docker-web-standard ###
 
 ## ----------------------------------------------------------
@@ -95,5 +103,5 @@ down:
 	make docker/down
 
 dump:
-	make filesystem/dump
 	make mysql/dump
+	make filesystem/dump

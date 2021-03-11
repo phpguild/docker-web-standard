@@ -1,7 +1,7 @@
 .PHONY: logrotate/install
 
 logrotate/install:
-ifeq ($(APP_ENV),prod)
+ifneq ($(wildcard $(shell pwd)/config/logrotate/$(APP_INSTANCE)),)
 ifeq ($(wildcard /etc/logrotate.d/$(APP_NAME)-$(APP_INSTANCE)),)
 	$(SUDO) ln -s "$(shell pwd)/config/logrotate/$(APP_INSTANCE)" "/etc/logrotate.d/$(APP_NAME)-$(APP_INSTANCE)"
 endif

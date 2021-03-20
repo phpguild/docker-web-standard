@@ -60,6 +60,9 @@ RUN if [ "${APP_ENV}" = "prod" ] ; then \
         && docker-php-ext-install opcache \
 ; fi
 
+# PHP sysvsem
+RUN docker-php-ext-install sysvsem
+
 # Composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1

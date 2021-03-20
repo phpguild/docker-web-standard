@@ -6,5 +6,7 @@ filesystem/dump:
 
 filesystem/restore:
 ifneq ($(wildcard ./data/backup/public.tar.gz),)
+	$(SUDO) tar -pzcvf ./data/backup/public.restore.tar.gz --exclude='*/cache*' ./public
+	$(SUDO) rm -fr ./public
 	$(SUDO) tar -zxvf ./data/backup/public.tar.gz
 endif

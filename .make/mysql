@@ -14,6 +14,8 @@ mysql/dump-schema:
 
 mysql/restore:
 ifneq ($(wildcard ./data/backup/$(MYSQL_DATABASE).sql),)
+	docker exec $(DOCKER_DATABASE) bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).restore.sql"'
+	docker exec $(DOCKER_DATABASE) cat "/tmp/$(MYSQL_DATABASE).restore.sql" > "./data/backup/$(MYSQL_DATABASE).restore.sql"
 	cat "./data/backup/$(MYSQL_DATABASE).sql" | docker exec -i $(DOCKER_DATABASE) /usr/bin/mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)"
 endif
 

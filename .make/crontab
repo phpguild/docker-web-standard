@@ -1,8 +1,7 @@
-.PHONY: crontab/install
+.PHONY: crontab/install crontab/copy
 
 crontab/install:
-ifneq ($(wildcard $(shell pwd)/config/crontab/$(APP_INSTANCE)),)
-ifeq ($(wildcard /etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)),)
-	$(SUDO) ln -s "$(shell pwd)/config/crontab/$(APP_INSTANCE)" "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)"
-endif
-endif
+	make crontab/copy
+
+crontab/copy:
+	if [ -s "$(shell pwd)/config/crontab/$(APP_INSTANCE)" ]; then $(SUDO) cp "$(shell pwd)/config/crontab/$(APP_INSTANCE)" "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)"; fi

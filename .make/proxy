@@ -1,21 +1,17 @@
-.PHONY: proxy/install proxy/restart
+.PHONY: proxy/install proxy/copy proxy/restart
 
 proxy/install:
 ifeq ($(wildcard /etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf),)
 	$(SUDO) which nginx || $(SUDO) apt-get install -y nginx
-ifeq ($(APP_ENV),dev)
-	$(SUDO) sh -c "grep -q -F '127.0.0.1 $(APP_NAME).local.test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).local.test' >> /etc/hosts"
-endif
-ifeq ($(APP_ENV),test)
-	$(SUDO) sh -c "grep -q -F '127.0.0.1 $(APP_NAME).test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).test' >> /etc/hosts"
-endif
+	if [ "dev" = "$(APP_ENV)" ]; then $(SUDO) sh -c "grep -q -F '127.0.0.1 $(APP_NAME).local.test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).local.test' >> /etc/hosts"; fi
+	if [ "test" = "$(APP_ENV)" ]; then $(SUDO) sh -c "grep -q -F '127.0.0.1 $(APP_NAME).test' /etc/hosts || echo '127.0.0.1 $(APP_NAME).test' >> /etc/hosts"; fi
 	$(SUDO) mkdir -p /etc/nginx/sites-enabled
-ifeq ($(wildcard /etc/nginx/nginx.conf.save),)
-	$(SUDO) cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.save
-	$(SUDO) cp $(shell pwd)/config/nginx/nginx.conf /etc/nginx/nginx.conf
+	if [ ! -f /etc/nginx/nginx.conf.save ]; then $(SUDO) cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.save && $(SUDO) cp "$(shell pwd)/config/nginx/nginx.conf" /etc/nginx/nginx.conf; fi
 endif
-	$(SUDO) ln -s "$(shell pwd)/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf"
-endif
+	make proxy/copy
+
+proxy/copy:
+	if [ -s "$(shell pwd)/config/nginx/proxies/$(APP_INSTANCE).conf" ]; then $(SUDO) cp "$(shell pwd)/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf"; fi
 
 proxy/restart:
 	$(SUDO) nginx -t

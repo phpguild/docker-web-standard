@@ -6,9 +6,8 @@
 .PHONY: filesystem/install
 
 filesystem/install:
-ifeq ($(APP_ENV),prod)
+	$(SUDO) chmod 777 ./config/crontab/*
 	$(SUDO) chown -R $(APP_UID):$(APP_UID) ./var
-endif
 
 ## ----------------------------------------------------------
 ## APP

@@ -83,10 +83,14 @@ RUN echo "StrictHostKeyChecking no\nUserKnownHostsFile=/dev/null" >> /etc/ssh/ss
 
 # Permissions
 RUN sed -i "s/www-data:x:1000:33/www-data:x:${APP_UID}:33/g" /etc/passwd \
-    && mkdir /home/www-data \
+    && mkdir -p /home/www-data \
     && chown -R www-data:www-data /home/www-data \
     && usermod -d /home/www-data www-data \
     && usermod -u ${APP_UID} www-data
+
+# PHP sessions
+RUN mkdir -p /var/lib/php/sessions \
+    && chown -R www-data:www-data /var/lib/php/sessions
 
 # Workdir
 WORKDIR /var/www

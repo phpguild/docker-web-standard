@@ -149,8 +149,11 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_TZ=Europe/Paris' . PHP_EOL .
                 'APP_UID=1000' . PHP_EOL .
+                'APP_DUMP_HOURLY=0' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=<insecure>' . PHP_EOL .
+                'MYSQL_USER=__dwsmyapp__' . PHP_EOL .
+                'MYSQL_PASSWORD=<insecure>' . PHP_EOL .
                 'MYSQL_DATABASE=__dwsmyapp__' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;

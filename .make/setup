@@ -3,4 +3,4 @@
 setup/server:
 	make ssl/install
 	make proxy/install
-	make proxy/restart
+	make crontab/install

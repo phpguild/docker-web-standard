@@ -2,7 +2,7 @@
 
 filesystem/dump:
 	$(SUDO) tar -pzcvf ./data/backup/public.tar.gz --exclude='*/cache*' ./public
-	cp ./data/backup/public.tar.gz "./data/backup/public_`date +%H`.tar.gz"
+	if [ 1 -eq "$(APP_DUMP_HOURLY)" ]; then cp ./data/backup/public.tar.gz "./data/backup/public_`date +%H`.tar.gz"; fi
 
 filesystem/restore:
 ifneq ($(wildcard ./data/backup/public.tar.gz),)

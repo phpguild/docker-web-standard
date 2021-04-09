@@ -1,4 +1,4 @@
-.PHONY: mysql mysql/dump mysql/dump-schema mysql/restore
+.PHONY: mysql mysql/dump mysql/dump-schema mysql/restore mysql/patch
 
 mysql:
 	docker exec -it $(DOCKER_DATABASE) mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" $(MYSQL_DATABASE)
@@ -6,7 +6,7 @@ mysql:
 mysql/dump:
 	docker exec $(DOCKER_DATABASE) bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
 	docker exec $(DOCKER_DATABASE) cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/backup/$(MYSQL_DATABASE).sql"
-	cp "./data/backup/$(MYSQL_DATABASE).sql" "./data/backup/$(MYSQL_DATABASE)_`date +%H`.sql"
+	if [ 1 -eq "$(APP_DUMP_HOURLY)" ]; then cp "./data/backup/$(MYSQL_DATABASE).sql" "./data/backup/$(MYSQL_DATABASE)_`date +%H`.sql"; fi
 
 mysql/dump-schema:
 	docker exec $(DOCKER_DATABASE) bash -c '/usr/bin/mysqldump --no-data --skip-comments -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).schema.sql"'

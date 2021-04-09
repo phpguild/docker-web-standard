@@ -30,9 +30,6 @@ KERNEL := $(shell sh -c "uname")
 ## ----------------------------------------------------------
 .PHONY: install update update-force start start-build restart restart-force stop down dump
 
-_preinstall:
-	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
-
 _dockerinstall:
 	docker-compose build
 
@@ -43,8 +40,6 @@ else
 	docker-compose run --rm --no-deps -u $(APP_UID) $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer -v install
 endif
 
-_postinstall:
-
 install:
 ifneq ($(APP_NAME),__dwsmyapp__)
 	make _preinstall
@@ -53,36 +48,36 @@ ifneq ($(APP_NAME),__dwsmyapp__)
 	make setup/server
 	make docker/start && echo "Waiting MySQL..." && sleep 20
 	make composer/install
-	make crontab/install
 	make app/install
 	make filesystem/install
-	make proxy/install
-	make proxy/restart
-	make _postinstall
 	make listening
+	make _postinstall
 endif
 
 update:
+	make _preupdate
 	make docker/stop
 	make git/update
 	make docker/start
 	make composer/install
-	make crontab/copy
 	make app/update
-	make filesystem/install
+	make crontab/copy
 	make proxy/copy
-	make proxy/restart
+	make filesystem/install
 	make listening
+	make _postupdate
 
 update-force:
+	make _preupdate
 	make docker/down
 	make git/update
 	make docker/start-build
 	make composer/install
 	make app/update
-	make filesystem/install
 	make proxy/restart
+	make filesystem/install
 	make listening
+	make _postupdate
 
 start:
 	make docker/start

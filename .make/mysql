@@ -1,3 +1,5 @@
+DOCKER_DATABASE := "$(APP_NAME)_$(CONTAINER_DATABASE)_$(APP_INSTANCE)"
+
 .PHONY: mysql mysql/dump mysql/dump-schema mysql/restore mysql/patch
 
 mysql:

@@ -12,7 +12,7 @@ endif
 
 proxy/copy:
 	if [ -s "$(shell pwd)/config/nginx/proxies/$(APP_INSTANCE).conf" ]; then $(SUDO) cp "$(shell pwd)/config/nginx/proxies/$(APP_INSTANCE).conf" "/etc/nginx/sites-enabled/$(APP_NAME).$(APP_INSTANCE).conf"; fi
-	proxy/restart
+	make proxy/restart
 
 proxy/restart:
 	$(SUDO) nginx -t

@@ -1,4 +1,4 @@
-FROM nginx:1.19.6
+FROM nginx:1.20.0
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 

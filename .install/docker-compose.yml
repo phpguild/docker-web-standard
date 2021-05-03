@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     ports:
       - 127.0.0.1:${APP_PORT}:80
-    links:
+    depends_on:
       - php
     volumes:
       - ./config/nginx/sites-enabled/:/etc/nginx/sites-enabled/
@@ -40,7 +40,7 @@ services:
         APP_TZ: ${APP_TZ}
     container_name: __dwsmyapp___php_${APP_INSTANCE}
     restart: unless-stopped
-    links:
+    depends_on:
       - database
     volumes:
       - ./config/php/php.ini:/usr/local/etc/php/php.ini

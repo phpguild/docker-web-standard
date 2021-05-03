@@ -155,6 +155,12 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'MYSQL_USER=__dwsmyapp__' . PHP_EOL .
                 'MYSQL_PASSWORD=<insecure>' . PHP_EOL .
                 'MYSQL_DATABASE=__dwsmyapp__' . PHP_EOL .
+                'BLACKFIRE_ENABLE=0' . PHP_EOL .
+                'BLACKFIRE_LOG_LEVEL=4' . PHP_EOL .
+                'BLACKFIRE_CLIENT_ID=' . PHP_EOL .
+                'BLACKFIRE_CLIENT_TOKEN=' . PHP_EOL .
+                'BLACKFIRE_SERVER_ID=' . PHP_EOL .
+                'BLACKFIRE_SERVER_TOKEN=' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;
             file_put_contents($file, $data);

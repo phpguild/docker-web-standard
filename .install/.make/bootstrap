@@ -4,11 +4,22 @@
 -include .env.$(APP_ENV).local
 export
 
+COMPOSE_PROJECT_NAME := "$(APP_NAME)_$(APP_INSTANCE)"
+
+CONTAINER_NGINX := nginx
 CONTAINER_PHP := php
 CONTAINER_DATABASE := database
-COMPOSE_PROJECT_NAME := "$(APP_NAME)_$(APP_INSTANCE)"
+CONTAINER_BLACKFIRE := blackfire
+
+DOCKER_NGINX := "$(APP_NAME)_$(CONTAINER_NGINX)_$(APP_INSTANCE)"
+DOCKER_PHP := "$(APP_NAME)_$(CONTAINER_PHP)_$(APP_INSTANCE)"
+DOCKER_DATABASE := "$(APP_NAME)_$(CONTAINER_DATABASE)_$(APP_INSTANCE)"
+DOCKER_BLACKFIRE := "$(APP_NAME)_$(CONTAINER_BLACKFIRE)_$(APP_INSTANCE)"
+
 SUDO := $(shell sh -c "if [ 0 != $EUID ]; then echo 'sudo'; fi")
 KERNEL := $(shell sh -c "uname")
+TAR := $(shell sh -c "if command -v gtar >/dev/null 2>&1; then echo 'gtar'; else echo 'tar'; fi")
+SED := $(shell sh -c "if 'Linux' != uname >/dev/null 2>&1; then echo 'sed -i ""'; else echo 'sed -i'; fi")
 
 ###> phpguild/docker-web-standard ###
 -include ./vendor/phpguild/docker-web-standard/.make/composer

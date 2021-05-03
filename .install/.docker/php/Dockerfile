@@ -1,4 +1,4 @@
-FROM php:7.4.15-fpm-buster
+FROM php:7.4.18-fpm-buster
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
@@ -6,6 +6,7 @@ MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 ARG APP_ENV='prod'
 ARG APP_UID=1000
 ARG APP_TZ='Europe/Paris'
+ARG BLACKFIRE_ENABLE=0
 
 # Timezone
 RUN rm /etc/localtime \
@@ -48,20 +49,32 @@ RUN apt-get install -y libmagickwand-dev --no-install-recommends \
     && docker-php-ext-enable imagick
 
 # PHP Apcu
-RUN if [ "${APP_ENV}" = "prod" ] ; then \
+RUN if [ "prod" = "${APP_ENV}" ] ; then \
     pecl install apcu apcu_bc \
         && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
         && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini \
 ; fi
 
 # PHP OpCache
-RUN if [ "${APP_ENV}" = "prod" ] ; then \
+RUN if [ "prod" = "${APP_ENV}" ] ; then \
     docker-php-ext-configure opcache --enable-opcache \
         && docker-php-ext-install opcache \
 ; fi
 
 # PHP sysvsem
 RUN docker-php-ext-install sysvsem
+
+# PHP blackfire
+RUN if [ 1 = "${BLACKFIRE_ENABLE}" ] ; then \
+    version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+        && architecture=$(case $(uname -m) in i386 | i686 | x86) echo "i386" ;; x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+        && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/$architecture/$version \
+        && mkdir -p /tmp/blackfire \
+        && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
+        && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so \
+        && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
+        && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz \
+; fi
 
 # Composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser

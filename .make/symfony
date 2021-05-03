@@ -1,5 +1,3 @@
-DOCKER_PHP := "$(APP_NAME)_$(CONTAINER_PHP)_$(APP_INSTANCE)"
-
 .PHONY: symfony/cc symfony/ddc symfony/ddd symfony/dsc symfony/dsdf symfony/dsuf symfony/dsuds symfony/dsv symfony/dfl symfony/dmm symfony/dmd symfony/dmds symfony/dmg symfony/hfl symfony/ai
 
 symfony/cc:

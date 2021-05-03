@@ -4,7 +4,7 @@
 ## Main
 ## ----------------------------------------------------------
 _preinstall:
-	sed -i "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
+	$(SED) "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf .env* README.md
 
 _postinstall:
 

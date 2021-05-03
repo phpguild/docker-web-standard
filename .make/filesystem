@@ -1,12 +1,12 @@
 .PHONY: filesystem/backup filesystem/restore
 
 filesystem/dump:
-	$(SUDO) tar -pzcvf ./data/backup/public.tar.gz --exclude='*/cache*' ./public
+	$(SUDO) $(TAR) -pzcvf ./data/backup/public.tar.gz --exclude='*/cache*' ./public
 	if [ 1 -eq "$(APP_DUMP_HOURLY)" ]; then cp ./data/backup/public.tar.gz "./data/backup/public_`date +%H`.tar.gz"; fi
 
 filesystem/restore:
 ifneq ($(wildcard ./data/backup/public.tar.gz),)
-	$(SUDO) tar -pzcvf ./data/backup/public.restore.tar.gz --exclude='*/cache*' ./public
+	$(SUDO) $(TAR) -pzcvf ./data/backup/public.restore.tar.gz --exclude='*/cache*' ./public
 	$(SUDO) rm -fr ./public
-	$(SUDO) tar -zxvf ./data/backup/public.tar.gz
+	$(SUDO) $(TAR) -zxvf ./data/backup/public.tar.gz
 endif

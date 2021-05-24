@@ -3,8 +3,8 @@
 NGINX_SITES_ENABLED_DIR := $(shell sh -c "if [ -d "/etc/nginx/servers" ]; then echo '/etc/nginx/servers'; else echo '/etc/nginx/sites-enabled'; fi")
 
 proxy/compatibility:
-	if "Linux" != uname && [ ! -d "/etc/nginx" ] && [ -d "/usr/local/etc/nginx" ]; then $(SUDO) ln -s /usr/local/etc/nginx /etc/nginx; fi
-	if "Linux" != uname; then $(SUDO) touch /etc/nginx/nginx.conf.save; fi
+	if [ "Linux" != "$(KERNEL)" ] && [ ! -d "/etc/nginx" ] && [ -d "/usr/local/etc/nginx" ]; then $(SUDO) ln -s /usr/local/etc/nginx /etc/nginx; fi
+	if [ "Linux" != "$(KERNEL)" ]; then $(SUDO) touch /etc/nginx/nginx.conf.save; fi
 
 proxy/install:
 ifeq ($(wildcard $(NGINX_SITES_ENABLED_DIR)/$(APP_NAME).$(APP_INSTANCE).conf),)

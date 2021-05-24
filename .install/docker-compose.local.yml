@@ -38,12 +38,12 @@ services:
         APP_ENV: ${APP_ENV}
         APP_UID: ${APP_UID}
         APP_TZ: ${APP_TZ}
-        BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE}
+#        BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE}
     container_name: __dwsmyapp___php_${APP_INSTANCE}
     restart: unless-stopped
     depends_on:
       - database
-      - blackfire
+#      - blackfire
     volumes:
       - ./config/php/php.local.ini:/usr/local/etc/php/php.ini
       - ./:/var/www
@@ -80,14 +80,14 @@ services:
         max-size: "1m"
         max-file: "10"
 
-  blackfire:
-    image: blackfire/blackfire
-    container_name: __dwsmyapp___blackfire_${APP_INSTANCE}
-    env_file:
-      - .env
-      - .env.local
-    logging:
-      driver: json-file
-      options:
-        max-size: "1m"
-        max-file: "10"
+#  blackfire:
+#    image: blackfire/blackfire
+#    container_name: __dwsmyapp___blackfire_${APP_INSTANCE}
+#    env_file:
+#      - .env
+#      - .env.local
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: "1m"
+#        max-file: "10"

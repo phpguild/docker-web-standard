@@ -4,22 +4,22 @@ mysql:
 	docker exec -it $(DOCKER_DATABASE) mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" $(MYSQL_DATABASE)
 
 mysql/dump:
-	docker exec $(DOCKER_DATABASE) bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
+	docker exec $(DOCKER_DATABASE) bash -c 'mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).sql"'
 	docker exec $(DOCKER_DATABASE) cat "/tmp/$(MYSQL_DATABASE).sql" > "./data/backup/$(MYSQL_DATABASE).sql"
 	if [ 1 -eq "$(APP_DUMP_HOURLY)" ]; then cp "./data/backup/$(MYSQL_DATABASE).sql" "./data/backup/$(MYSQL_DATABASE)_`date +%H`.sql"; fi
 
 mysql/dump-schema:
-	docker exec $(DOCKER_DATABASE) bash -c '/usr/bin/mysqldump --no-data --skip-comments -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).schema.sql"'
+	docker exec $(DOCKER_DATABASE) bash -c 'mysqldump --no-data --skip-comments -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).schema.sql"'
 	docker exec $(DOCKER_DATABASE) cat "/tmp/$(MYSQL_DATABASE).schema.sql" > "./data/backup/$(MYSQL_DATABASE).schema.sql"
 
 mysql/restore:
 ifneq ($(wildcard ./data/backup/$(MYSQL_DATABASE).sql),)
-	docker exec $(DOCKER_DATABASE) bash -c '/usr/bin/mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).restore.sql"'
+	docker exec $(DOCKER_DATABASE) bash -c 'mysqldump -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)" > "/tmp/$(MYSQL_DATABASE).restore.sql"'
 	docker exec $(DOCKER_DATABASE) cat "/tmp/$(MYSQL_DATABASE).restore.sql" > "./data/backup/$(MYSQL_DATABASE).restore.sql"
-	cat "./data/backup/$(MYSQL_DATABASE).sql" | docker exec -i $(DOCKER_DATABASE) /usr/bin/mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)"
+	cat "./data/backup/$(MYSQL_DATABASE).sql" | docker exec -i $(DOCKER_DATABASE) mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" "$(MYSQL_DATABASE)"
 endif
 
 mysql/patch:
 ifneq ($(wildcard ./config/mysql/patch.$(APP_INSTANCE).sql),)
-	cat "./config/mysql/patch.$(APP_INSTANCE).sql" | docker exec -i $(DOCKER_DATABASE) /usr/bin/mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" $(MYSQL_DATABASE)
+	cat "./config/mysql/patch.$(APP_INSTANCE).sql" | docker exec -i $(DOCKER_DATABASE) mysql -uroot -p"$(MYSQL_ROOT_PASSWORD)" $(MYSQL_DATABASE)
 endif

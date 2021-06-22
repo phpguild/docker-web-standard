@@ -1,17 +1,17 @@
-FROM php:7.4.18-fpm-buster
+FROM php:8.0.7-fpm-buster
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV='prod'
 ARG APP_UID=1000
-ARG APP_TZ='Europe/Paris'
+ARG TZ='Europe/Paris'
 ARG BLACKFIRE_ENABLE=0
 
 # Timezone
 RUN rm /etc/localtime \
-    && ln -s /usr/share/zoneinfo/${APP_TZ} /etc/localtime \
-    && echo ${APP_TZ} > /etc/timezone
+    && ln -s /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone
 
 # Update
 RUN rm -f /etc/apt/sources.list.d/*
@@ -23,9 +23,6 @@ RUN apt-get install -y git
 # PHP MbString
 RUN apt-get install -y libonig-dev \
     && docker-php-ext-install mbstring
-
-# PHP MySql
-RUN docker-php-ext-install pdo_mysql mysqli
 
 # PHP Exif
 RUN docker-php-ext-install exif
@@ -48,11 +45,22 @@ RUN apt-get install -y libmagickwand-dev --no-install-recommends \
     && pecl install imagick \
     && docker-php-ext-enable imagick
 
+# PHP sysvsem
+RUN docker-php-ext-install sysvsem
+
+# PHP MySql
+RUN docker-php-ext-install pdo_mysql mysqli
+
+# PHP PostgreSQL
+#RUN apt-get install -y libpq-dev \
+#    && docker-php-ext-install pdo_pgsql pgsql
+
 # PHP Apcu
 RUN if [ "prod" = "${APP_ENV}" ] ; then \
-    pecl install apcu apcu_bc \
+    mkdir -p /usr/src/php/ext/apcu \
+        && curl -fsSL https://pecl.php.net/get/apcu | tar xvz -C "/usr/src/php/ext/apcu" --strip 1 \
+        && docker-php-ext-install apcu \
         && docker-php-ext-enable apcu --ini-name 10-docker-php-ext-apcu.ini \
-        && docker-php-ext-enable apc --ini-name 20-docker-php-ext-apc.ini \
 ; fi
 
 # PHP OpCache
@@ -60,9 +68,6 @@ RUN if [ "prod" = "${APP_ENV}" ] ; then \
     docker-php-ext-configure opcache --enable-opcache \
         && docker-php-ext-install opcache \
 ; fi
-
-# PHP sysvsem
-RUN docker-php-ext-install sysvsem
 
 # PHP blackfire
 RUN if [ 1 = "${BLACKFIRE_ENABLE}" ] ; then \

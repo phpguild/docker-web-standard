@@ -1,16 +1,16 @@
-FROM nginx:1.20.0
+FROM nginx:1.21.0
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV='prod'
 ARG APP_UID=1000
-ARG APP_TZ='Europe/Paris'
+ARG TZ='Europe/Paris'
 
 # Timezone
 RUN rm /etc/localtime \
-    && ln -s /usr/share/zoneinfo/${APP_TZ} /etc/localtime \
-    && echo ${APP_TZ} > /etc/timezone
+    && ln -s /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone
 
 # Update
 RUN rm -f /etc/apt/sources.list.d/*

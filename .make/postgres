@@ -1,0 +1,27 @@
+.PHONY: postgres postgres/dump postgres/dump-schema postgres/restore postgres/patch
+
+POSTGRESS_URL := "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(CONTAINER_DATABASE):$(POSTGRES_PORT)/$(POSTGRES_DB)"
+
+postgres:
+	docker exec -it $(DOCKER_DATABASE) psql $(POSTGRESS_URL)
+
+postgres/dump:
+	docker exec $(DOCKER_DATABASE) bash -c 'pg_dump --clean $(POSTGRESS_URL) > "/tmp/$(POSTGRES_DB).sql"'
+	docker exec $(DOCKER_DATABASE) cat "/tmp/$(POSTGRES_DB).sql" > "./data/backup/$(POSTGRES_DB).sql"
+	if [ 1 -eq "$(APP_DUMP_HOURLY)" ]; then cp "./data/backup/$(POSTGRES_DB).sql" "./data/backup/$(POSTGRES_DB)_`date +%H`.sql"; fi
+
+postgres/dump-schema:
+	docker exec $(DOCKER_DATABASE) bash -c 'pg_dump --clean $(POSTGRESS_URL) > "/tmp/$(POSTGRES_DB).schema.sql"'
+	docker exec $(DOCKER_DATABASE) cat "/tmp/$(POSTGRES_DB).schema.sql" > "./data/backup/$(POSTGRES_DB).schema.sql"
+
+postgres/restore:
+ifneq ($(wildcard ./data/backup/$(POSTGRES_DB).sql),)
+	docker exec $(DOCKER_DATABASE) bash -c 'pg_dump --clean $(POSTGRESS_URL) > "/tmp/$(POSTGRES_DB).restore.sql"'
+	docker exec $(DOCKER_DATABASE) cat "/tmp/$(POSTGRES_DB).restore.sql" > "./data/backup/$(POSTGRES_DB).restore.sql"
+	cat "./data/backup/$(POSTGRES_DB).sql" | docker exec -i $(DOCKER_DATABASE) psql $(POSTGRESS_URL)
+endif
+
+postgres/patch:
+ifneq ($(wildcard ./config/mysql/patch.$(APP_INSTANCE).sql),)
+	cat "./config/mysql/patch.$(APP_INSTANCE).sql" | docker exec -i $(DOCKER_DATABASE) psql $(POSTGRESS_URL)
+endif

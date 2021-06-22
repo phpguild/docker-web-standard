@@ -9,7 +9,7 @@ services:
       args:
         APP_ENV: ${APP_ENV}
         APP_UID: ${APP_UID}
-        APP_TZ: ${APP_TZ}
+        TZ: ${TZ}
     container_name: __dwsmyapp___nginx_${APP_INSTANCE}
     restart: unless-stopped
     ports:
@@ -37,7 +37,7 @@ services:
       args:
         APP_ENV: ${APP_ENV}
         APP_UID: ${APP_UID}
-        APP_TZ: ${APP_TZ}
+        TZ: ${TZ}
     container_name: __dwsmyapp___php_${APP_INSTANCE}
     restart: unless-stopped
     depends_on:
@@ -55,14 +55,7 @@ services:
         max-file: "10"
 
   database:
-    image: __dwsmyapp___mariadb
-    build:
-      context: ./
-      dockerfile: .docker/mariadb/Dockerfile
-      args:
-        APP_ENV: ${APP_ENV}
-        APP_UID: ${APP_UID}
-        APP_TZ: ${APP_TZ}
+    image: mariadb:10.6.2
     container_name: __dwsmyapp___database_${APP_INSTANCE}
     restart: unless-stopped
     volumes:
@@ -75,3 +68,18 @@ services:
       options:
         max-size: "1m"
         max-file: "10"
+
+#  database:
+#    image: postgres:9.6.22-buster
+#    container_name: __dwsmyapp___database_${APP_INSTANCE}
+#    restart: unless-stopped
+#    volumes:
+#      - ./data/postgresql:/var/lib/postgresql/data
+#    env_file:
+#      - .env
+#      - .env.local
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: "1m"
+#        max-file: "10"

@@ -1,4 +1,6 @@
 -include ./.make/bootstrap
+-include ./vendor/phpguild/docker-web-standard/.make/mysql
+#-include ./vendor/phpguild/docker-web-standard/.make/postgres
 
 ## ----------------------------------------------------------
 ## Main
@@ -19,6 +21,17 @@ _postupdate:
 
 filesystem/install:
 	$(SUDO) chown -fR $(APP_UID):$(APP_UID) ./var || exit 0
+
+## ----------------------------------------------------------
+## Database
+## ----------------------------------------------------------
+.PHONY: database/dump database/restore
+
+database/dump:
+	make mysql/dump
+
+database/restore:
+	make mysql/restore
 
 ## ----------------------------------------------------------
 ## APP

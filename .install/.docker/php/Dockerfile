@@ -36,14 +36,19 @@ RUN apt-get install -y libicu-dev \
     && docker-php-ext-install intl
 
 # PHP GD
-RUN apt-get install -y libfreetype6-dev libjpeg-dev libpng-dev libgd-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN apt-get install -y libfreetype6-dev libjpeg-dev libpng-dev libgd-dev libheif-dev libwebp-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install gd
 
 # PHP Imagick
-RUN apt-get install -y libmagickwand-dev --no-install-recommends \
+RUN apt-get install -y libmagickwand-dev \
     && pecl install imagick \
     && docker-php-ext-enable imagick
+
+# PHP Gmagick
+#RUN apt-get install -y libgraphicsmagick1-dev \
+#    && pecl install gmagick-2.0.6RC1 \
+#    && docker-php-ext-enable gmagick
 
 # PHP sysvsem
 RUN docker-php-ext-install sysvsem

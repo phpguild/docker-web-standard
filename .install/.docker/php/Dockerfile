@@ -1,4 +1,4 @@
-FROM php:8.0.7-fpm-buster
+FROM php:8.0.9-fpm-buster
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 

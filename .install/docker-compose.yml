@@ -55,7 +55,7 @@ services:
         max-file: "10"
 
   database:
-    image: mariadb:10.6.2
+    image: mariadb:10.6.3
     container_name: __dwsmyapp___database_${APP_INSTANCE}
     restart: unless-stopped
     volumes:

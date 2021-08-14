@@ -2,7 +2,7 @@ version: "3"
 services:
 
   nginx:
-    image: __dwsmyapp___nginx
+    image: ${APP_NAME}_nginx
     build:
       context: ./
       dockerfile: .docker/nginx/Dockerfile
@@ -10,7 +10,7 @@ services:
         APP_ENV: ${APP_ENV}
         APP_UID: ${APP_UID}
         TZ: ${TZ}
-    container_name: __dwsmyapp___nginx_${APP_INSTANCE}
+    container_name: ${APP_NAME}_nginx_${APP_INSTANCE}
     restart: "no"
     ports:
       - ${APP_PORT}:80
@@ -30,7 +30,7 @@ services:
         max-file: "10"
 
   php:
-    image: __dwsmyapp___php
+    image: ${APP_NAME}_php
     build:
       context: ./
       dockerfile: .docker/php/Dockerfile
@@ -39,7 +39,7 @@ services:
         APP_UID: ${APP_UID}
         TZ: ${TZ}
 #        BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE}
-    container_name: __dwsmyapp___php_${APP_INSTANCE}
+    container_name: ${APP_NAME}_php_${APP_INSTANCE}
     restart: "no"
     depends_on:
       - database
@@ -58,7 +58,7 @@ services:
 
   database:
     image: mariadb:10.6.3
-    container_name: __dwsmyapp___database_${APP_INSTANCE}
+    container_name: ${APP_NAME}_database_${APP_INSTANCE}
     restart: "no"
     ports:
       - 33306:3306
@@ -75,7 +75,7 @@ services:
 
 #  database:
 #    image: postgres:9.6.22-buster
-#    container_name: __dwsmyapp___database_${APP_INSTANCE}
+#    container_name: ${APP_NAME}_database_${APP_INSTANCE}
 #    restart: "no"
 #    ports:
 #      - 54320:5432
@@ -92,7 +92,7 @@ services:
 
 #  blackfire:
 #    image: blackfire/blackfire
-#    container_name: __dwsmyapp___blackfire_${APP_INSTANCE}
+#    container_name: ${APP_NAME}_blackfire_${APP_INSTANCE}
 #    restart: "no"
 #    env_file:
 #      - .env

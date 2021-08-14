@@ -2,14 +2,14 @@
 
 composer/install:
 ifeq ($(APP_ENV),prod)
-	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
+	docker-compose run --rm --no-deps -u $(APP_UID) $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v install"
 else
-	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer install
+	docker-compose run --rm --no-deps -u $(APP_UID) $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer install
 endif
 
 composer/update:
 ifeq ($(APP_ENV),prod)
-	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v update"
+	docker-compose run --rm --no-deps -u $(APP_UID) $(CONTAINER_PHP) bash -c "APP_ENV=prod php -d memory_limit=-1 /usr/bin/composer --no-dev --optimize-autoloader -v update"
 else
-	docker-compose run --rm --no-deps -u $(APP_UID) -v "$(SSH_AUTH_SOCK):/ssh-agent" -e "SSH_AUTH_SOCK=/ssh-agent" $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer update
+	docker-compose run --rm --no-deps -u $(APP_UID) $(CONTAINER_PHP) php -d memory_limit=-1 /usr/bin/composer update
 endif

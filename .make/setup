@@ -1,7 +1,0 @@
-.PHONY: setup/server
-
-setup/server:
-	make proxy/compatibility
-	make crontab/install
-	make ssl/install
-	make proxy/install

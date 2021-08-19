@@ -1,4 +1,4 @@
-# {project_name}
+# __dwsmyapp__
 
 ## Installation
 

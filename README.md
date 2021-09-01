@@ -2,9 +2,10 @@
 
 Docker installer for web app, include :
 
-- PHP 7.4.15
-- MariaDB 10.5.8
-- Nginx 1.19.6
+- PHP 8.0.9
+- MariaDB 10.6.3 or PostgreSQL 9.6.22
+- Nginx 1.21.1
+- Blackfire (for dev)
 
 ## Require from composer
 

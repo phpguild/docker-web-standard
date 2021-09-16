@@ -21,6 +21,7 @@ _postupdate:
 
 filesystem/install:
 	$(SUDO) chown -fR $(APP_UID):$(APP_UID) ./var || exit 0
+	$(SUDO) chmod -fR 775 ./var || exit 0
 
 ## ----------------------------------------------------------
 ## Database

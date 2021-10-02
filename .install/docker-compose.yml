@@ -9,6 +9,8 @@ services:
       args:
         APP_ENV: ${APP_ENV}
         APP_UID: ${APP_UID}
+        APP_GID: ${APP_GID}
+        APP_USER: ${APP_USER}
         TZ: ${TZ}
     container_name: ${APP_NAME}_nginx_${APP_INSTANCE}
     restart: unless-stopped
@@ -37,6 +39,8 @@ services:
       args:
         APP_ENV: ${APP_ENV}
         APP_UID: ${APP_UID}
+        APP_GID: ${APP_GID}
+        APP_USER: ${APP_USER}
         TZ: ${TZ}
     container_name: ${APP_NAME}_php_${APP_INSTANCE}
     restart: unless-stopped
@@ -55,7 +59,7 @@ services:
         max-file: "10"
 
   database:
-    image: mariadb:10.6.3
+    image: mariadb:10.6.4
     container_name: ${APP_NAME}_database_${APP_INSTANCE}
     restart: unless-stopped
     volumes:
@@ -70,7 +74,7 @@ services:
         max-file: "10"
 
 #  database:
-#    image: postgres:9.6.22-buster
+#    image: postgres:9.6.23-buster
 #    container_name: ${APP_NAME}_database_${APP_INSTANCE}
 #    restart: unless-stopped
 #    volumes:

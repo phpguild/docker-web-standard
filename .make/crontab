@@ -4,4 +4,4 @@ crontab/install:
 	make crontab/copy
 
 crontab/copy:
-	if [ -d "/etc/cron.d" ] && [ -s "$(shell pwd)/config/crontab/$(APP_INSTANCE)" ]; then $(SUDO) cp "$(shell pwd)/config/crontab/$(APP_INSTANCE)" "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)"; fi
+	if [ -d "/etc/cron.d" ] && [ -s "$(shell pwd)/config/crontab/$(APP_INSTANCE)" ]; then $(SUDO) cp "$(shell pwd)/config/crontab/$(APP_INSTANCE)" "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)" && $(SUDO) chmod 644 "/etc/cron.d/$(APP_NAME)-$(APP_INSTANCE)"; fi

@@ -6,7 +6,7 @@
 ## Main
 ## ----------------------------------------------------------
 _preinstall:
-	$(SED) "s/__dwsmyapp__/$(APP_NAME)/g" docker-compose*.yml config/nginx/proxies/*.conf config/crontab/* .env* README.md
+	$(SED) "s/__dwsmyapp__/$(APP_NAME)/g" config/nginx/proxies/*.conf config/crontab/* .env* README.md
 
 _postinstall:
 
@@ -20,7 +20,7 @@ _postupdate:
 .PHONY: filesystem/install
 
 filesystem/install:
-	$(SUDO) chown -fR $(APP_UID):$(APP_UID) ./var || exit 0
+	$(SUDO) chown -fR $(APP_UID):$(APP_GID) ./var || exit 0
 	$(SUDO) chmod -fR 775 ./var || exit 0
 
 ## ----------------------------------------------------------

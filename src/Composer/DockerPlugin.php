@@ -148,6 +148,8 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_PORT=8000' . PHP_EOL .
                 'APP_INSTANCE=live' . PHP_EOL .
                 'APP_UID=1000' . PHP_EOL .
+                'APP_GID=33' . PHP_EOL .
+                'APP_USER=www-data' . PHP_EOL .
                 'APP_DUMP_HOURLY=0' . PHP_EOL .
                 'TZ=Europe/Paris' . PHP_EOL .
                 'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .

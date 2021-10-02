@@ -1,10 +1,12 @@
-FROM php:8.0.9-fpm-buster
+FROM php:8.0.11-fpm-buster
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV='prod'
 ARG APP_UID=1000
+ARG APP_GID=33
+ARG APP_USER='www-data'
 ARG TZ='Europe/Paris'
 ARG BLACKFIRE_ENABLE=0
 
@@ -105,15 +107,15 @@ RUN apt-get autoremove --purge -y \
 RUN echo "StrictHostKeyChecking no\nUserKnownHostsFile=/dev/null" >> /etc/ssh/ssh_config
 
 # Permissions
-RUN sed -i "s/www-data:x:1000:33/www-data:x:${APP_UID}:33/g" /etc/passwd \
-    && mkdir -p /home/www-data \
-    && chown -R www-data:www-data /home/www-data \
-    && usermod -d /home/www-data www-data \
-    && usermod -u ${APP_UID} www-data
+RUN sed -i "s/${APP_USER}:x:1000:33/${APP_USER}:x:${APP_UID}:${APP_GID}/g" /etc/passwd \
+    && mkdir -p "/home/${APP_USER}" \
+    && chown -R ${APP_UID}:${APP_GID} "/home/${APP_USER}" \
+    && usermod -d "/home/${APP_USER}" ${APP_USER} \
+    && usermod -u ${APP_UID} ${APP_USER}
 
 # PHP sessions
 RUN mkdir -p /var/lib/php/sessions \
-    && chown -R www-data:www-data /var/lib/php/sessions
+    && chown -R ${APP_UID}:${APP_GID} /var/lib/php/sessions
 
 # Workdir
 WORKDIR /var/www

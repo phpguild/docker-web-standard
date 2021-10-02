@@ -4,3 +4,7 @@ git/update:
 	$(eval GIT_COMMIT_REF := $(shell if [ -n "${GIT_COMMIT_REF}" ]; then echo "${GIT_COMMIT_REF}"; else echo "origin/`git rev-parse --abbrev-ref HEAD`"; fi))
 	git fetch
 	git reset --hard "$(GIT_COMMIT_REF)"
+
+git/version-write:
+	if ! grep "^APP_VERSION=" .env.local; then echo "APP_VERSION=\n" >> .env.local; fi
+	$(SED) "s/^APP_VERSION=.*/APP_VERSION=`git describe --tags HEAD 2>/dev/null || git rev-parse --short HEAD`/g" .env.local

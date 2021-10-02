@@ -68,6 +68,7 @@ update:
 	make _preupdate
 	make docker/stop
 	make git/update
+	make git/version-write
 	make docker/start
 	make composer/install
 	make app/update
@@ -81,6 +82,7 @@ update-force:
 	make _preupdate
 	make docker/down
 	make git/update
+	make git/version-write
 	make docker/start-build
 	make composer/install
 	make app/update

@@ -1,10 +1,12 @@
-FROM nginx:1.21.1
+FROM nginx:1.21.3
 
 MAINTAINER Jonathan SAHM <contact@johnstyle.fr>
 
 # APP environment
 ARG APP_ENV='prod'
 ARG APP_UID=1000
+ARG APP_GID=33
+ARG APP_USER='www-data'
 ARG TZ='Europe/Paris'
 
 # Timezone
@@ -26,7 +28,7 @@ RUN apt-get autoremove --purge -y \
     && rm -rf /tmp/*
 
 # Permissions
-RUN usermod -u ${APP_UID} www-data
+RUN usermod -u ${APP_UID} ${APP_USER}
 
 # Workdir
 WORKDIR /var/www

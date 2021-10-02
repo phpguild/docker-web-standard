@@ -4,7 +4,11 @@ ssl/install:
 ifeq ($(wildcard /etc/nginx/certs/dhparams.pem),)
 	$(SUDO) which openssl || $(SUDO) apt-get install -y openssl
 	$(SUDO) mkdir -p /etc/nginx/certs
+ifeq ($(APP_ENV),prod)
+	$(SUDO) openssl dhparam -out /etc/nginx/certs/dhparams.pem 4096
+else
 	$(SUDO) openssl dhparam -out /etc/nginx/certs/dhparams.pem 2048
+endif
 endif
 ifneq ($(filter dev test,$(APP_ENV)),)
 ifeq ($(wildcard /etc/nginx/certs/selfsigned.crt),)

@@ -118,4 +118,5 @@ RUN mkdir -p /var/lib/php/sessions \
     && chown -R ${APP_UID}:${APP_GID} /var/lib/php/sessions
 
 # Workdir
+COPY ./ /var/www
 WORKDIR /var/www

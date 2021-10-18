@@ -21,7 +21,6 @@ Create `.env.local`
     APP_DEBUG=1
     APP_PORT={custom_local_port}
     APP_INSTANCE=local
-    COMPOSE_FILE=docker-compose.local.yml
     ###< phpguild/docker-web-standard ###
 
 Edit `config/nginx/proxies/local.conf`

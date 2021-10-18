@@ -86,7 +86,7 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
         $pluginDir = realpath(__DIR__) . '/../..';
         $installDir = $pluginDir . '/.install';
 
-        if (file_exists($appDir . '/docker-compose.yml')) {
+        if (file_exists($appDir . '/docker-compose.yml') || file_exists($appDir . '/docker-compose.yaml')) {
             return;
         }
 
@@ -152,7 +152,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_USER=www-data' . PHP_EOL .
                 'APP_DUMP_HOURLY=0' . PHP_EOL .
                 'TZ=Europe/Paris' . PHP_EOL .
-                'COMPOSE_FILE=docker-compose.yml' . PHP_EOL .
                 'MYSQL_ROOT_PASSWORD=<secret>' . PHP_EOL .
                 'MYSQL_USER=__dwsmyapp__' . PHP_EOL .
                 'MYSQL_PASSWORD=<secret>' . PHP_EOL .
@@ -190,7 +189,6 @@ class DockerPlugin implements PluginInterface, EventSubscriberInterface
                 'APP_DEBUG=1' . PHP_EOL .
                 'APP_PORT=' . $this->config['APP_PORT_LOCAL'] . PHP_EOL .
                 'APP_INSTANCE=local' . PHP_EOL .
-                'COMPOSE_FILE=docker-compose.local.yml' . PHP_EOL .
                 '###< phpguild/docker-web-standard ###' . PHP_EOL
             ;
             file_put_contents($file, $data);

@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  php:
+    restart: "no"
+#    depends_on:
+#      - blackfire
+
+  database:
+    restart: "no"
+    ports:
+      - 33445:3306
+
+#  blackfire:
+#    image: blackfire/blackfire
+#    container_name: ${APP_NAME}_blackfire_${APP_INSTANCE}
+#    restart: "no"
+#    env_file:
+#      - .env
+#      - .env.local
+#    networks:
+#      - app
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: "1m"
+#        max-file: "10"

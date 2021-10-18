@@ -31,4 +31,4 @@ RUN apt-get autoremove --purge -y \
 RUN usermod -u ${APP_UID} ${APP_USER}
 
 # Workdir
-WORKDIR /var/www
+COPY ./ /var/www

@@ -62,6 +62,42 @@ RUN docker-php-ext-install pdo_mysql mysqli
 #RUN apt-get install -y libpq-dev \
 #    && docker-php-ext-install pdo_pgsql pgsql
 
+# PHP MysqlServer
+#ENV ACCEPT_EULA=Y
+#RUN apt-get install -y --no-install-recommends apt-transport-https gnupg \
+#    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+#    && curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+#    && apt-get update \
+#    && apt-get install -y --no-install-recommends msodbcsql17 unixodbc-dev \
+#    && pecl install sqlsrv pdo_sqlsrv \
+#    && docker-php-ext-enable sqlsrv --ini-name 20-docker-php-ext-sqlsrv.ini \
+#    && docker-php-ext-enable pdo_sqlsrv --ini-name 20-docker-php-ext-pdo_sqlsrv.ini
+
+# PHP amqp
+#RUN apt-get install -y librabbitmq-dev \
+#    && mkdir -p /usr/src/php/ext/amqp \
+#    && curl -fsSL https://pecl.php.net/get/amqp | tar xvz -C "/usr/src/php/ext/amqp" --strip 1 \
+#    && docker-php-ext-install amqp \
+#    && docker-php-ext-enable amqp --ini-name 10-docker-php-ext-amqp.ini
+
+# PHP SMB
+#RUN apt-get install -y smbclient libsmbclient-dev \
+#    && pecl install smbclient \
+#    && docker-php-ext-enable smbclient
+
+# PHP Redis
+#RUN pecl install redis \
+#  && docker-php-ext-enable redis
+
+# PHP SSH/SFTP
+#RUN apt-get install -y --no-install-recommends libssh2-1-dev \
+#    && pecl install ssh2-1.1.2 \
+#    && docker-php-ext-enable ssh2
+
+# PHP Soap
+#RUN apt-get install -y --no-install-recommends libxml2-dev \
+#    && docker-php-ext-install soap
+
 # PHP Apcu
 RUN if [ "prod" = "${APP_ENV}" ] ; then \
     mkdir -p /usr/src/php/ext/apcu \
@@ -118,5 +154,4 @@ RUN mkdir -p /var/lib/php/sessions \
     && chown -R ${APP_UID}:${APP_GID} /var/lib/php/sessions
 
 # Workdir
-COPY ./ /var/www
 WORKDIR /var/www

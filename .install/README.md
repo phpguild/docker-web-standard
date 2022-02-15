@@ -23,10 +23,6 @@ Create `.env.local`
     APP_INSTANCE=local
     ###< phpguild/docker-web-standard ###
 
-Edit `config/nginx/proxies/local.conf`
-
-    proxy_pass http://127.0.0.1:{custom_local_port};
-
 Run command
 
     make -e APP_NAME=__dwsmyapp__ install

@@ -1,2 +1,15 @@
+/.devops/
+!/.devops/*-entrypoint.sh
+/.docker/
+/.git/
+/.idea/
+/.k8s/
+/.make/
 /data/
+/node_modules/
 /var/
+/vendor/
+/.env.local
+/.gitignore
+/Makefile
+/README.md
